@@ -9,7 +9,7 @@ using Amarath.Models;
  * Contains the Context for the Amarath Database, required for connection
  */
 
-namespace Amarath.Data
+namespace Amarath.DAL.Data
 {
     public class AmarathContext : DbContext
     {
@@ -19,6 +19,7 @@ namespace Amarath.Data
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Customer> Customers { get; set; }
 
     }
 }
