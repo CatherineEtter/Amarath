@@ -24,7 +24,7 @@ namespace Amarath.DAL.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
-            builder.UseSqlServer("CONNECTION STRING");
+            builder.UseSqlServer("Server=tcp:amarath.database.windows.net,1433;Initial Catalog=amarath-db;Persist Security Info=False;User ID=dbadmin;Password=CS4320@stmu;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
             base.OnConfiguring(builder);
         }
 
