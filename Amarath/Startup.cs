@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+using Amarath.DAL.Data;
 
 namespace Amarath
 {
@@ -33,6 +35,15 @@ namespace Amarath
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddDbContext<AmarathContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("AmarathDatabase")));
+
+            var optionsBuilder = new DbContextOptionsBuilder<AmarathContext>();
+            var dbContext = new AmarathContext(optionsBuilder.Options);
+            System.Diagnostics.Debug.WriteLine("\n\n\n****");
+            var query = dbContext.Customers.First(x => x.LastName == "Liu");
+            System.Diagnostics.Debug.WriteLine("\n\n*** " + query.FirstName);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
