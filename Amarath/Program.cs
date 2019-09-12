@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Amarath.Models;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -14,6 +15,10 @@ namespace Amarath
     {
         public static void Main(string[] args)
         {
+            /*using( var customer = new Customer())
+            {
+
+            }*/
             CreateWebHostBuilder(args).Build().Run();
         }
 

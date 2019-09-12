@@ -38,6 +38,11 @@ namespace Amarath
 
             services.AddDbContext<AmarathContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("AmarathDatabase")));
+
+            var optionsBuilder = new DbContextOptionsBuilder<AmarathContext>();
+            var dbContext = new AmarathContext(optionsBuilder.Options);
+            System.Diagnostics.Debug.WriteLine("\n\n\n****");
+            System.Diagnostics.Debug.WriteLine(dbContext.Customers.Where(x => x.LastName == "Liu"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

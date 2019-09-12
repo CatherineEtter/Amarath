@@ -13,12 +13,22 @@ namespace Amarath.DAL.Data
 {
     public class AmarathContext : DbContext
     {
+        public AmarathContext(DbContextOptions options) : base(options)
+        {
+
+        }
         public AmarathContext(DbContextOptions<AmarathContext> options) : base(options)
         {
 
         }
 
-        public DbSet<User> Users { get; set; }
+        protected override void OnConfiguring(DbContextOptionsBuilder builder)
+        {
+            builder.UseSqlServer("CONNECTION STRING");
+            base.OnConfiguring(builder);
+        }
+
+        //public DbSet<User> Users { get; set; }
         public DbSet<Customer> Customers { get; set; }
 
     }
