@@ -11,12 +11,12 @@ using System.Threading.Tasks;
  */
 namespace Amarath.Models
 {
-    [Table("SalesLT.Customer")]
+    [Table("Customer", Schema = "SalesLT")]
     public class Customer
     {
         [Key]
         public int CustomerId { get; set; }
-        public int NameStyle { get; set; }
+        public Boolean NameStyle { get; set; }
         public string Title { get; set; }
         public string FirstName { get; set; }
         public string MiddleName { get; set; }
