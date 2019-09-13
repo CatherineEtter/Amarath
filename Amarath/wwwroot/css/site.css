@@ -35,3 +35,21 @@ body {
         display: none;
     }
 }
+.full-height {
+    height: 100%;
+    min-height: 100%;
+}
+.login-register-container {
+    min-height: 500px;
+    padding: 10px;
+    margin: 20px auto 20px auto;
+    box-shadow: 5px 10px 5px #888888;
+    color: #fffbff;
+}
+.login-container {
+    background-color: #5b5478;
+}
+
+.register-container {
+    background-color: #5b5478;
+}

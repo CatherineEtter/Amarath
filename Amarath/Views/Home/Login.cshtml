@@ -1,0 +1,33 @@
+﻿
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="row text-center full-height">
+    <div class="col-sm-6 col-sm-offset-3">
+        <div class="register-container login-register-container">
+            <form id="register-form" runat="server">
+                <h2>Create an Account</h2>
+                <!--
+                <div>
+                    <label asp-for="Username"></label>
+                    <input asp-for="Username"/>
+                </div>
+                -->
+                <h3>@ViewData["Message"]</h3>
+            </form>
+        </div>
+        <!--
+        <div class="login-container login-register-container">
+            <form id="login-form">
+                <h2>Login</h2>
+                <h3>@ViewData["Message"]</h3>
+            </form>
+        </div>
+        -->
+        <div>
+            <p>Please create an account or login to play</p>
+        </div>
+    </div>
+</div>
+
