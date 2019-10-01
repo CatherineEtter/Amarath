@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Amarath.Models;
+using Amarath.DAL.Models;
 
 /*
  * Contains the Context for the Amarath Database, required for connection
@@ -30,6 +31,6 @@ namespace Amarath.DAL.Data
 
         //public DbSet<User> Users { get; set; }
         public DbSet<Customer> Customers { get; set; }
-
+        public DbSet<User> Users { get; set; }
     }
 }

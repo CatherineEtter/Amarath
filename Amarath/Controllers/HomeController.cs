@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Amarath.Models;
+using Amarath.DAL.Models;
 
 namespace Amarath.Controllers
 {
@@ -18,6 +19,11 @@ namespace Amarath.Controllers
         public IActionResult Login()
         {
             ViewData["Message"] = "Login Page";
+            return View();
+        }
+        public IActionResult Register()
+        {
+            ViewData["Message"] = "Create an Account";
             return View();
         }
 
