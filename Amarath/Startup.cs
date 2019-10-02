@@ -11,6 +11,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Amarath.DAL.Data;
+using Amarath.DAL.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Amarath
 {
@@ -35,6 +37,8 @@ namespace Amarath
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddIdentity<IdentityUserExt, IdentityRole>().AddEntityFrameworkStores<AmarathContext>();
 
             services.AddDbContext<AmarathContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("AmarathDatabase")));
@@ -62,6 +66,7 @@ namespace Amarath
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {

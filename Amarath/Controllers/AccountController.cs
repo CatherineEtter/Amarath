@@ -10,10 +10,14 @@ namespace Amarath.Controllers
 {
     public class AccountController : Controller
     {
-        //UserManager is injected into the constructor for ASP.NET Identity
-        public AccountController(UserManager<IdentityUser> userManager)
-        {
+        private readonly UserManager<IdentityUserExt> userManager;
+        private readonly SignInManager<IdentityUserExt> signInManager;
 
+        //UserManager is injected into the constructor for ASP.NET Identity
+        public AccountController(UserManager<IdentityUserExt> userManager, SignInManager<IdentityUserExt> signInManager)
+        {
+            this.userManager = userManager;
+            this.signInManager = signInManager;
         }
         public IActionResult Index()
         {
@@ -24,6 +28,7 @@ namespace Amarath.Controllers
             ViewData["Message"] = "Login Page";
             return View();
         }
+        [HttpGet]
         public IActionResult Register()
         {
             ViewData["Message"] = "Create an Account";
@@ -35,11 +40,16 @@ namespace Amarath.Controllers
             return View(userModel);
         }
 
-        [HttpPost]
-        public ActionResult Register(RegisterViewModel viewModel)
+        /*[HttpPost]
+        public async Task<ActionResult> Register(RegisterViewModel viewModel)
         {
-            return View();
-        }
+           if(ModelState.IsValid)
+            {
+                var user = new IdentityUserExt { UserName = viewModel.Username, Email = viewModel.EmailAddress, FirstName = viewModel.FirstName, LastName = viewModel.LastName};
+                var result = await userManager.CreateAsync(user, viewModel.Password);
+            }
+            return View(viewModel); //for errors
+        }*/
 
         public ActionResult LoginUser()
         {

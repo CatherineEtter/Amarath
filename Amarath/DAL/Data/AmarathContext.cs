@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Amarath.Models;
 using Amarath.DAL.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 /*
  * Contains the Context for the Amarath Database, required for connection
@@ -12,12 +13,12 @@ using Amarath.DAL.Models;
 
 namespace Amarath.DAL.Data
 {
-    public class AmarathContext : DbContext
+    public class AmarathContext : IdentityDbContext
     {
-        public AmarathContext(DbContextOptions options) : base(options)
+        /*public AmarathContext(DbContextOptions options) : base(options)
         {
 
-        }
+        }*/
         public AmarathContext(DbContextOptions<AmarathContext> options) : base(options)
         {
 
@@ -27,6 +28,10 @@ namespace Amarath.DAL.Data
         {
             builder.UseSqlServer("CONNECTION STRING");
             base.OnConfiguring(builder);
+        }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
         }
 
         //public DbSet<User> Users { get; set; }
