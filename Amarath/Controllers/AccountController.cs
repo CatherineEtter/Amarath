@@ -3,12 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Amarath.DAL.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Amarath.Controllers
 {
     public class AccountController : Controller
     {
+        //UserManager is injected into the constructor for ASP.NET Identity
+        public AccountController(UserManager<IdentityUser> userManager)
+        {
+
+        }
         public IActionResult Index()
         {
             return View();
@@ -27,6 +33,17 @@ namespace Amarath.Controllers
         {
             User userModel = new User();
             return View(userModel);
+        }
+
+        [HttpPost]
+        public ActionResult Register(RegisterViewModel viewModel)
+        {
+            return View();
+        }
+
+        public ActionResult LoginUser()
+        {
+            return RedirectToAction("Index");
         }
     }
 }

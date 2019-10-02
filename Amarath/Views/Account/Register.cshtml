@@ -1,0 +1,53 @@
+﻿@model Amarath.DAL.Models.RegisterViewModel;
+
+@{
+    ViewData["Title"] = "Register";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row text-center full-height">
+    <div class="col-sm-6 col-sm-offset-3">
+        <div class="register-container login-register-container col-md-12">
+            <form id="register-form" runat="server" method="post">
+                <h2>Create an Account</h2>
+
+                <div class="form-group">
+                    <label asp-for="Username" runat="server"></label>
+                    <input asp-for="Username" />
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FirstName" runat="server"></label>
+                    <input asp-for="FirstName" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="LastName" runat="server"></label>
+                    <input asp-for="LastName" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="EmailAddress" runat="server"></label>
+                    <input asp-for="EmailAddress" />
+                    <span asp-validation-for="EmailAddress" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password" runat="server"></label>
+                    <input asp-for="Password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ConfirmPassword" runat="server"></label>
+                    <input asp-for="ConfirmPassword" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input class="btn btn-default" type="submit" value="Create an Account" />
+                </div>
+
+            </form>
+        </div>
+        <div>
+            <p>Please register or <a asp-area="" asp-controller="Account" asp-action="Login">login</a> to play</p>
+        </div>
+    </div>
+</div>
+
