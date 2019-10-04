@@ -43,6 +43,7 @@ namespace Amarath
             services.AddDbContext<AmarathContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("AmarathDatabase")));
 
+            //TODO: Remove this SQL Example at the end
             var optionsBuilder = new DbContextOptionsBuilder<AmarathContext>();
             var dbContext = new AmarathContext(optionsBuilder.Options);
             System.Diagnostics.Debug.WriteLine("\n\n\n****");

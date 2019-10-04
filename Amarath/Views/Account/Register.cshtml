@@ -8,35 +8,36 @@
 <div class="row text-center full-height">
     <div class="col-sm-6 col-sm-offset-3">
         <div class="register-container login-register-container col-md-12">
-            <form id="register-form" runat="server" method="post">
+            <form id="register-form" class="center-block" runat="server" method="post">
+                <div asp-validation-summary="All" class="text-danger"></div>
                 <h2>Create an Account</h2>
 
                 <div class="form-group">
                     <label asp-for="Username" runat="server"></label>
-                    <input asp-for="Username" />
-                    <span asp-validation-for="Username" class="text-danger"></span>
+                    <input asp-for="Username" class="form-control"/>
+                    <span  asp-validation-for="Username" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="FirstName" runat="server"></label>
-                    <input asp-for="FirstName" />
+                    <input asp-for="FirstName" class="form-control"/>
                 </div>
                 <div class="form-group">
                     <label asp-for="LastName" runat="server"></label>
-                    <input asp-for="LastName" />
+                    <input asp-for="LastName" class="form-control"/>
                 </div>
                 <div class="form-group">
                     <label asp-for="EmailAddress" runat="server"></label>
-                    <input asp-for="EmailAddress" />
+                    <input asp-for="EmailAddress" class="form-control"/>
                     <span asp-validation-for="EmailAddress" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Password" runat="server"></label>
-                    <input asp-for="Password" />
+                    <input asp-for="Password" class="form-control"/>
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="ConfirmPassword" runat="server"></label>
-                    <input asp-for="ConfirmPassword" />
+                    <input asp-for="ConfirmPassword" class="form-control"/>
                     <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                 </div>
                 <div class="form-group">

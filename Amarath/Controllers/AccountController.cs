@@ -40,16 +40,28 @@ namespace Amarath.Controllers
             return View(userModel);
         }
 
-        /*[HttpPost]
+        [HttpPost]
         public async Task<ActionResult> Register(RegisterViewModel viewModel)
         {
            if(ModelState.IsValid)
             {
                 var user = new IdentityUserExt { UserName = viewModel.Username, Email = viewModel.EmailAddress, FirstName = viewModel.FirstName, LastName = viewModel.LastName};
                 var result = await userManager.CreateAsync(user, viewModel.Password);
+
+                if(result.Succeeded)
+                {
+                    //TODO: Decide to use session or permanent cookie
+                    await signInManager.SignInAsync(user, isPersistent: true);
+                    return RedirectToAction("Index", "Home");
+                }
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
             }
+
             return View(viewModel); //for errors
-        }*/
+        }
 
         public ActionResult LoginUser()
         {

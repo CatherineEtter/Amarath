@@ -45,11 +45,18 @@ body {
     margin: 20px auto 20px auto;
     box-shadow: 5px 10px 5px #888888;
     color: #fffbff;
+    padding: 20px;
 }
+/*TODO: Make Login and Register different colors?*/
 .login-container {
-    background-color: #5b5478;
+   /* background-color: #5b5478;*/
+    background-color: #998dc9;
 }
 
 .register-container {
-    background-color: #5b5478;
+    /* background-color: #5b5478;*/
+    background-color: #998dc9;
+}
+.login-register-container form .form-group input{
+    color: #000000;
 }
