@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity;
+@using Amarath.DAL.Models;
+@inject  SignInManager<IdentityUserExt> signInManager;
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -33,6 +36,22 @@
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                </ul>
+                <ul class="nav navbar-nav">
+                    <!--Don't logout using a GET request-->
+                    @if (signInManager.IsSignedIn(User))
+                    {
+                        <form method="post" asp-action="Logout" asp-controller="Account">
+                            <button type="submit" class="btn">
+                                Logout @User.Identity.Name
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <li><a asp-area="" asp-controller="Account" asp-action="Login">Login</a></li>
+                    }
+
                 </ul>
             </div>
         </div>

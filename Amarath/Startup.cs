@@ -11,6 +11,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Amarath.DAL.Data;
+using Amarath.DAL.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Amarath
 {
@@ -36,14 +38,17 @@ namespace Amarath
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            services.AddIdentity<IdentityUserExt, IdentityRole>().AddEntityFrameworkStores<AmarathContext>();
+
             services.AddDbContext<AmarathContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("AmarathDatabase")));
 
-            var optionsBuilder = new DbContextOptionsBuilder<AmarathContext>();
+            //TODO: Remove this SQL Example at the end
+           /* var optionsBuilder = new DbContextOptionsBuilder<AmarathContext>();
             var dbContext = new AmarathContext(optionsBuilder.Options);
             System.Diagnostics.Debug.WriteLine("\n\n\n****");
             var query = dbContext.Customers.First(x => x.LastName == "Liu");
-            System.Diagnostics.Debug.WriteLine("\n\n*** " + query.FirstName);
+            System.Diagnostics.Debug.WriteLine("\n\n*** " + query.FirstName);*/
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,6 +67,7 @@ namespace Amarath
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {
