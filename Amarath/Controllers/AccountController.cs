@@ -39,6 +39,14 @@ namespace Amarath.Controllers
             User userModel = new User();
             return View(userModel);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
+
         [HttpPost]
         public async Task<ActionResult> Login(LoginViewModel viewModel)
         {
