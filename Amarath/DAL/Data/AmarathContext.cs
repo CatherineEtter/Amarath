@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Amarath.DAL.Data
 {
-    public class AmarathContext : IdentityDbContext
+    public class AmarathContext : IdentityDbContext<IdentityUserExt>
     {
         /*public AmarathContext(DbContextOptions options) : base(options)
         {
@@ -35,7 +35,7 @@ namespace Amarath.DAL.Data
         }
 
         //public DbSet<User> Users { get; set; }
-        public DbSet<Customer> Customers { get; set; }
+        //public DbSet<Customer> Customers { get; set; }
         public DbSet<User> Users { get; set; }
     }
 }

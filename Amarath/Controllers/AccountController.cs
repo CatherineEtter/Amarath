@@ -39,6 +39,25 @@ namespace Amarath.Controllers
             User userModel = new User();
             return View(userModel);
         }
+        [HttpPost]
+        public async Task<ActionResult> Login(LoginViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await signInManager.PasswordSignInAsync(viewModel.Username, viewModel.Password, viewModel.RememberMe, false);
+
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid Credentials");
+                }
+            }
+
+            return View(viewModel); //for errors
+        }
 
         [HttpPost]
         public async Task<ActionResult> Register(RegisterViewModel viewModel)
