@@ -34,10 +34,49 @@ namespace Amarath.Controllers
             ViewData["Message"] = "Create an Account";
             return View();
         }
+        public IActionResult Profile()
+        {
+            return View();
+        }
+        public IActionResult EditProfile()
+        {
+            return View();
+        }
         public ActionResult Add(int id=0)
         {
             User userModel = new User();
             return View(userModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditProfile(EditProfileViewModel viewModel)
+        {
+            
+            if(ModelState.IsValid)
+            {
+                var updatedUser = await userManager.GetUserAsync(User);
+                var passConfirmResult = await signInManager.CheckPasswordSignInAsync(updatedUser, viewModel.Password, false);
+                if(passConfirmResult.Succeeded)
+                {
+                    updatedUser.UserName = viewModel.Username;
+                    updatedUser.FirstName = viewModel.FirstName;
+                    updatedUser.LastName = viewModel.LastName;
+                    updatedUser.Email = viewModel.EmailAddress;
+
+                    var result = await userManager.UpdateAsync(updatedUser);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("Profile", "Account");
+                    }
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                }
+                ModelState.AddModelError(string.Empty, "Invalid Credentials");
+
+            }
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -88,11 +127,6 @@ namespace Amarath.Controllers
             }
 
             return View(viewModel); //for errors
-        }
-
-        public ActionResult LoginUser()
-        {
-            return RedirectToAction("Index");
         }
     }
 }
