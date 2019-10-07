@@ -43,6 +43,15 @@ namespace Amarath
             services.AddDbContext<AmarathContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("AmarathDatabase")));
 
+            //Change password complexity
+            services.Configure<IdentityOptions>(options => 
+            {
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredUniqueChars = 0;
+                options.Password.RequireDigit = false;
+                options.Password.RequireNonAlphanumeric = false;
+            });
+
             //TODO: Remove this SQL Example at the end
            /* var optionsBuilder = new DbContextOptionsBuilder<AmarathContext>();
             var dbContext = new AmarathContext(optionsBuilder.Options);

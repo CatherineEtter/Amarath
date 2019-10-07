@@ -8,7 +8,8 @@ namespace Amarath.DAL.Models
 {
     public class LoginViewModel
     {
-        [Required(ErrorMessage = "Username is required")]
+        [Required(ErrorMessage = "Username or Email is required")]
+        [Display(Name = "Username or Email")]
         [DataType(DataType.Text)]
         public string Username { get; set; }
 

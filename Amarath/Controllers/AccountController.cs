@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Amarath.DAL.Data;
 using Amarath.DAL.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -91,7 +92,7 @@ namespace Amarath.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await signInManager.PasswordSignInAsync(viewModel.Username, viewModel.Password, viewModel.RememberMe, false);
+                var result = await signInManager.PasswordSignInAsync(viewModel.Username, viewModel.Password, viewModel.RememberMe, false); 
 
                 if (result.Succeeded)
                 {
