@@ -37,19 +37,15 @@
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
                 </ul>
-                <ul class="nav navbar-nav">
+                <ul class="nav navbar-nav navbar-right">
                     <!--Don't logout using a GET request-->
                     @if (signInManager.IsSignedIn(User))
                     {
-                        <form method="post" asp-action="Logout" asp-controller="Account">
-                            <button type="submit" class="btn">
-                                Logout @User.Identity.Name
-                            </button>
-                        </form>
+                        <li><a asp-area="" asp-controller="Account" asp-action="Profile">@User.Identity.Name</a></li>
                     }
                     else
                     {
-                        <li><a asp-area="" asp-controller="Account" asp-action="Login">Login</a></li>
+                        <li><a asp-area="" asp-controller="Account" asp-action="Login">Login / Sign Up</a></li>
                     }
 
                 </ul>
