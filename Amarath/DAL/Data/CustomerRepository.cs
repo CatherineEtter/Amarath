@@ -1,11 +1,21 @@
-﻿/*using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Amarath.Models;
 
+//This is an example model used to communicate with the SQL Database. All models must be defined in DAL/Data/AmarathContext.cs
 namespace Amarath.DAL.Data
 {
+    public interface ICustomerRepository
+    {
+        Customer GetCustomerByID(int CustomerId);
+        Customer Add(Customer customer);
+        Customer Update(Customer customer);
+        Customer Delete(int CustomerId);
+        IEnumerable<Customer> GetAllCustomer();
+        void Save();
+    }
     public class CustomerRepository : ICustomerRepository
     {
         private AmarathContext context;
@@ -55,4 +65,3 @@ namespace Amarath.DAL.Data
         }
     }
 }
- */

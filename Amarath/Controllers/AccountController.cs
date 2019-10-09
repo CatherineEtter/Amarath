@@ -43,11 +43,6 @@ namespace Amarath.Controllers
         {
             return View();
         }
-        public ActionResult Add(int id=0)
-        {
-            User userModel = new User();
-            return View(userModel);
-        }
 
         [HttpPost]
         public async Task<IActionResult> EditProfile(EditProfileViewModel viewModel)

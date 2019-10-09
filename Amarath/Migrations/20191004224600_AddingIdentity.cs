@@ -46,7 +46,7 @@ namespace Amarath.Migrations
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                 });
-
+            /*
             migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
@@ -65,7 +65,7 @@ namespace Amarath.Migrations
                 {
                     table.PrimaryKey("PK_Users", x => x.UserID);
                 });
-
+                */
             migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
@@ -229,8 +229,8 @@ namespace Amarath.Migrations
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
 
-            migrationBuilder.DropTable(
-                name: "Users");
+            /*migrationBuilder.DropTable(
+                name: "Users");*/
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
