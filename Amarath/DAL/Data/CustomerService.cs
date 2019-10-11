@@ -7,7 +7,7 @@ using Amarath.Models;
 //This is an example model used to communicate with the SQL Database. All models must be defined in DAL/Data/AmarathContext.cs
 namespace Amarath.DAL.Data
 {
-    public interface ICustomerRepository
+    public interface ICustomerService
     {
         Customer GetCustomerByID(int CustomerId);
         Customer Add(Customer customer);
@@ -16,11 +16,11 @@ namespace Amarath.DAL.Data
         IEnumerable<Customer> GetAllCustomer();
         void Save();
     }
-    public class CustomerRepository : ICustomerRepository
+    public class CustomerService : ICustomerService
     {
         private AmarathContext context;
         
-        public CustomerRepository(AmarathContext context)
+        public CustomerService(AmarathContext context)
         {
             this.context = context;
         }

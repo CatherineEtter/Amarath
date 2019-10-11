@@ -33,8 +33,6 @@ namespace Amarath.DAL.Data
         {
             base.OnModelCreating(builder);
         }
-
-        //public DbSet<User> Users { get; set; }
         public DbSet<Customer> Customers { get; set; }
     }
 }
