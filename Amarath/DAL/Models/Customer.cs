@@ -5,10 +5,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-/*
- * This is an example of how to setup each entity.
- * TODO: Delete when the actual database is initialized
- */
 namespace Amarath.Models
 {
     [Table("Customer", Schema = "SalesLT")]
