@@ -26,25 +26,28 @@
         <h3>Your Account Information</h3>
         <form method="post" asp-action="EditProfile">
             <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Username" runat="server"></label>
-                <input asp-for="Username" class="form-control" placeholder="@currentUser.UserName" value="@currentUser.UserName" />
-                <span asp-validation-for="Username" class="text-danger"></span>
+            <div class="well">
+                <div class="form-group">
+                    <label asp-for="Username" runat="server"></label>
+                    <input asp-for="Username" class="form-control" placeholder="@currentUser.UserName" value="@currentUser.UserName" />
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FirstName" runat="server"></label>
+                    <input asp-for="FirstName" class="form-control" placeholder="@currentUser.FirstName" value="@currentUser.FirstName" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="LastName" runat="server"></label>
+                    <input asp-for="LastName" class="form-control" placeholder="@currentUser.LastName" value="@currentUser.LastName" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="EmailAddress" runat="server"></label>
+                    <input asp-for="EmailAddress" class="form-control" placeholder="@currentUser.Email" value="@currentUser.Email" />
+                    <span asp-validation-for="EmailAddress" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="FirstName" runat="server"></label>
-                <input asp-for="FirstName" class="form-control" placeholder="@currentUser.FirstName" value="@currentUser.FirstName" />
-            </div>
-            <div class="form-group">
-                <label asp-for="LastName" runat="server"></label>
-                <input asp-for="LastName" class="form-control" placeholder="@currentUser.LastName" value="@currentUser.LastName" />
-            </div>
-            <div class="form-group">
-                <label asp-for="EmailAddress" runat="server"></label>
-                <input asp-for="EmailAddress" class="form-control" placeholder="@currentUser.Email" value="@currentUser.Email" />
-                <span asp-validation-for="EmailAddress" class="text-danger"></span>
-            </div>
-            <div class="form-group">
+            <hr />
+            <div class="form-group form-group-required">
                 <label asp-for="Password" runat="server"></label>
                 <input asp-for="Password" class="form-control" />
                 <span asp-validation-for="Password" class="text-danger"></span>

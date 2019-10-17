@@ -17,7 +17,7 @@
                 <div asp-validation-summary="All" class="text-danger"></div>
                 <h2>Create an Account</h2>
 
-                <div class="form-group">
+                <div class="form-group form-group-required">
                     <label asp-for="Username" runat="server"></label>
                     <input asp-for="Username" class="form-control"/>
                     <span  asp-validation-for="Username" class="text-danger"></span>
@@ -30,17 +30,17 @@
                     <label asp-for="LastName" runat="server"></label>
                     <input asp-for="LastName" class="form-control"/>
                 </div>
-                <div class="form-group">
+                <div class="form-group form-group-required">
                     <label asp-for="EmailAddress" runat="server"></label>
                     <input asp-for="EmailAddress" class="form-control"/>
                     <span asp-validation-for="EmailAddress" class="text-danger"></span>
                 </div>
-                <div class="form-group">
+                <div class="form-group form-group-required">
                     <label asp-for="Password" runat="server"></label>
                     <input asp-for="Password" class="form-control"/>
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
-                <div class="form-group">
+                <div class="form-group form-group-required">
                     <label asp-for="ConfirmPassword" runat="server"></label>
                     <input asp-for="ConfirmPassword" class="form-control"/>
                     <span asp-validation-for="ConfirmPassword" class="text-danger"></span>

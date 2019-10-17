@@ -60,3 +60,18 @@ body {
 .login-register-container form .form-group input{
     color: #000000;
 }
+.form-group-required label::after{
+    content: " * ";
+    color: red;
+}
+.btn-outline {
+    background-color: transparent;
+    text-decoration: none;
+    border-color: rgba(255,255,255,0.2);
+}
+.btn-outline:hover, .btn-outline:active{
+    text-decoration: none;
+}
+.light-text {
+    color: #e6e6e6;
+}
