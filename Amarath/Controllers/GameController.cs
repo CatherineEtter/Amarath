@@ -12,5 +12,9 @@ namespace Amarath.Controllers
         {
             return View();
         }
+        public IActionResult Play()
+        {
+            return View();
+        }
     }
 }
