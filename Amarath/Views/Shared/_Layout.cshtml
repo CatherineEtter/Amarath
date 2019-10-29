@@ -41,10 +41,26 @@
                     @if (signInManager.IsSignedIn(User))
                     {
                         <li><a asp-area="" asp-controller="Account" asp-action="Profile">@User.Identity.Name</a></li>
+                        <li>
+                            <div class="dropdown">
+                                <button class="dropdown-toggle btn btn-outline navbar-btn" type="button" id="accountDropDown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="caret light-text"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="accountDropDown">
+                                    <li><a asp-controller="Account" asp-action="Profile">Profile</a></li>
+                                    <li>
+                                        <form method="post" asp-action="Logout" asp-controller="Account">
+                                            <button type="submit" class="btn btn-block"> Logout </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
                     }
                     else
                     {
-                        <li><a asp-area="" asp-controller="Account" asp-action="Login">Login / Sign Up</a></li>
+                        <li><a asp-area="" asp-controller="Account" asp-action="Login">Login</a></li>
+                        <li><a asp-area="" asp-controller="Account" asp-action="Register">Sign Up</a></li>
                     }
 
                 </ul>

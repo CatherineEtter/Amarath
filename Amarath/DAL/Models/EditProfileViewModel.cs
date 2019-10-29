@@ -21,6 +21,7 @@ namespace Amarath.DAL.Models
 
         [Required(ErrorMessage = "Password must not be blank")]
         [DataType(DataType.Password)]
+        [Display(Name = "Enter Password to update")]
         public string Password { get; set; }
     }
 }
