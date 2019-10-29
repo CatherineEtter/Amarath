@@ -9,11 +9,11 @@ namespace Amarath.DAL.Data
 {
     public interface ICharacterService
     {
+        IEnumerable<Character> GetAllCharacter();
         Character GetCharacterByID(int CharacterId);
         Character Add(Character character);
         Character Update(Character character);
         Character Delete(int CharacterId);
-        IEnumerable<Character> GetAllCharacter();
         void Save();
     }
     public class CharacterService : ICharacterService
