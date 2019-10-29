@@ -1,3 +1,28 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity;
+@using Amarath.DAL.Models;
+
+@{
     ViewData["Title"] = "Home Page";
 }
+@inject SignInManager<IdentityUserExt> signInManager;
+
+
+<style>
+    body {
+        background-color: #f0f0f0;
+    }
+</style>
+<div class="container text-center full-height">
+    <div class="col-sm-6 col-sm-offset-3">
+        @if (signInManager.IsSignedIn(User))
+        {
+            <form method="post" asp-action="Play" asp-controller="Game">
+                <button type="submit" class="btn btn-block"> Play Game </button>
+            </form>
+        }
+        else
+        {
+            <h3>Please <a asp-area="" asp-controller="Account" asp-action="Register">Register</a> or <a asp-area="" asp-controller="Account" asp-action="Login">Login</a> to play</h3>
+        }
+    </div>
+</div>
