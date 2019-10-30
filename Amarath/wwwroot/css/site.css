@@ -7,11 +7,18 @@ body {
 
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
+
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
+    height: 100%;
+    width: 100%;
+    margin: 0px;
 }
-
+.margin-container {
+    margin-right: auto;
+    margin-left: auto;
+}
 /* Carousel */
 .carousel-caption p {
     font-size: 20px;
@@ -74,4 +81,16 @@ body {
 }
 .light-text {
     color: #e6e6e6;
+}
+.game-container {
+    margin: 0px;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(255,255,255,0.2);
+    position: relative;
+}
+.game-footer {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
 }
