@@ -12,12 +12,11 @@ namespace Amarath.Models
     {
         [Key]
         public int CharId { get; set; }
-        public int UserId { get; set; }
-        public int SkillListId { get; set; }
+        public string UserId { get; set; }
         public int InventoryId { get; set; }
+        public int ClassTypeId { get; set; }
         public string Name { get; set; }
         public int Rank { get; set; }
-        public int Inventory { get; set; }
         public int Strength { get; set; }
         public int Dexterity { get; set; }
         public int Intelligence { get; set; }
