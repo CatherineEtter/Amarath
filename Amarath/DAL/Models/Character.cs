@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Amarath.Models
+namespace Amarath.DAL.Models
 {
     [Table("Character", Schema = "dbo")]
     public class Character
@@ -15,6 +15,7 @@ namespace Amarath.Models
         public int UserId { get; set; }
         public int SkillListId { get; set; }
         public int InventoryId { get; set; }
+        public int ClassTypeID { get; set; }
         public string Name { get; set; }
         public int Rank { get; set; }
         public int Inventory { get; set; }
@@ -22,5 +23,19 @@ namespace Amarath.Models
         public int Dexterity { get; set; }
         public int Intelligence { get; set; }
         public int Health { get; set; }
+    }
+
+    [Table("ClassType", Schema = "dbo")]
+    public class Class
+    {
+        [Key]
+        public int ClassTypeID { get; set; }
+        public string Name { get; set; }
+        public int Weapon { get; set; }
+        public int Strength { get; set; }
+        public int Dexterity { get; set; }
+        public int Intelligence { get; set; }
+        public int Health { get; set; }
+        public string Description { get; set; }
     }
 }

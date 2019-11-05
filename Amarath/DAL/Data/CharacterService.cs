@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Amarath.Models;
+using Amarath.DAL.Models;
 
 //This is an example model used to communicate with the SQL Database. All models must be defined in DAL/Data/AmarathContext.cs
 namespace Amarath.DAL.Data

@@ -8,6 +8,8 @@ namespace Amarath.DAL.Models
 {
     public class CharacterViewModel
     {
+        [Display(Name = "Description")]
+        public string Description { get; set; }
         [Display(Name = "Rank")]
         public int Rank { get; set; }
         [Display(Name = "Strength")]

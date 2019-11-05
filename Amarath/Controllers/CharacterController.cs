@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Amarath.DAL.Models;
+using Amarath.DAL.Data;
 
 namespace Amarath.Controllers
 {
@@ -17,10 +18,44 @@ namespace Amarath.Controllers
         public IActionResult CreateCharacter()
         {
             return View();
+            //return Json() -- return json
+            //return ReditectToAction("Index", "Home", new {page = 1, sortBy = "name"});
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateCharacter(CharacterViewModel viewModel)
+        public async Task<IActionResult> GetClasses(EditProfileViewModel viewModel)
+        {
+
+            if (ModelState.IsValid)
+            {
+                /*
+                var updatedUser = await userManager.GetUserAsync(User);
+                var passConfirmResult = await signInManager.CheckPasswordSignInAsync(updatedUser, viewModel.Password, false);
+                if (passConfirmResult.Succeeded)
+                {
+                    updatedUser.UserName = viewModel.Username;
+                    updatedUser.FirstName = viewModel.FirstName;
+                    updatedUser.LastName = viewModel.LastName;
+                    updatedUser.Email = viewModel.EmailAddress;
+
+                    var result = await userManager.UpdateAsync(updatedUser);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("Profile", "Account");
+                    }
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                }
+                ModelState.AddModelError(string.Empty, "Invalid Credentials");
+                */
+            }
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult CreateCharacter(CharacterViewModel viewModel)
         {
             if (ModelState.IsValid)
             {

@@ -34,7 +34,8 @@ namespace Amarath.DAL.Data
             base.OnModelCreating(builder);
         }
         public DbSet<Customer> Customers { get; set; }
-
         public DbSet<Character> Characters { get; set; }
+        public DbSet<Class> Classes { get; set; }
+
     }
 }
