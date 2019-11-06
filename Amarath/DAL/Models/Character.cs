@@ -20,6 +20,7 @@ namespace Amarath.Models
         public int Strength { get; set; }
         public int Dexterity { get; set; }
         public int Intelligence { get; set; }
-        public int Health { get; set; }
+        public int MaxHealth { get; set; }
+        public int CurrentHealth { get; set; }
     }
 }
