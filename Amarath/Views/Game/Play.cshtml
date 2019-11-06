@@ -32,7 +32,7 @@
             <p class="col-sm-2">@cChar.Name</p>
             <p class="col-sm-1">Lvl. @cChar.Rank</p>
             <p class="col-sm-6">Health</p>
-            <button class="col-sm-2 btn btn-default main-font">Stats</button>
+            <button class="col-sm-2 btn btn-default main-font" data-toggle="modal" data-target="#statsModal">Stats</button>
         </div>
     </div>
     <div class="row">
@@ -55,6 +55,22 @@
     </div>
 </div>
 
-<div class="modal fade" id="statsModal" aria-hidden="true">
-    <h2>modal :)</h2>
+<!--Inventory Modal-->
+<div class="modal fade" id="statsModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@cChar.Name 's Inventory</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h2>modal :)</h2>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><img src="~/images/Back_Button.png"/></button>
+            </div>
+        </div>
+    </div>
 </div>
