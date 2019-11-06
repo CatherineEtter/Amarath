@@ -16,7 +16,8 @@
     var cUser = await userManager.GetUserAsync(User);
     var cChar = db.Characters.First(x => x.UserId == cUser.Id);
     //var cInventory = db.Inventories.All(x => x.CharID == cChar.CharId);
-    var cInventory = db.Inventories.Select(x => x.CharID == cChar.CharId);
+    //var cInventory = db.Inventories.Select(x => x.CharID == cChar.CharId);
+    var cInventory = db.Inventories.Where(x => x.CharID == cChar.CharId);
 }
 <style>
     html, body {
@@ -99,12 +100,38 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body main-font-sm">
                 <h2>@cChar.Name 's Inventory</h2>
-                @foreach(var item in cInventory)
-                {
-                    <div>Item</div>
-                }
+                <div class="row">
+                    <div class="col-md-5">Name</div>
+                    <div class="col-md-1">Quantity</div>
+                    <div class="col-md-1">Type</div>
+                    <div class="col-md-1">Strength</div>
+                    <div class="col-md-1">Dexterity</div>
+                    <div class="col-md-1">Intelligence</div>
+                    <div class="col-md-1">Damage</div>
+                    <div class="col-md-1">Defense</div>
+                </div>
+                <div class="body-font">
+                    @foreach (var item in cInventory)
+                    {
+                        var detail = db.Items.First(x => x.ItemID == item.ItemID);
+                        <div class="row">
+                            <div class="col-md-5">@detail.Name</div>
+                            <div class="col-md-1">@item.Quantity</div>
+                            <div class="col-md-1">@detail.Type</div>
+                            <div class="col-md-1">@detail.Strength</div>
+                            <div class="col-md-1">@detail.Dexterity</div>
+                            <div class="col-md-1">@detail.Intelligence</div>
+                            <div class="col-md-1">@detail.Damage</div>
+                            <div class="col-md-1">@detail.Defense</div>
+                        </div>
+                        <div class="item-detail body-font-sm">
+                            <div><em>@detail.Description</em></div>
+                        </div>
+
+                    }
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal"><img src="~/images/Back_Button.png" /></button>

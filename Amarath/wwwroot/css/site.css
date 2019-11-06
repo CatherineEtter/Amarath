@@ -101,6 +101,12 @@ body {
 .main-font {
     font: bold 18px copperplate, verdana; 
 }
+.main-font-sm {
+    font: bold 10px copperplate, verdana;
+}
 .body-font {
     font: 18px monaco, consolas;
+}
+.body-font-sm {
+    font-size: 12px;
 }
