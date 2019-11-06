@@ -44,7 +44,7 @@
             <div class="col-sm-8">
                 <input class="body-font" value="test" />
             </div>
-            <button class="col-sm-2 btn btn-default main-font">Inventory</button>
+            <button class="col-sm-2 btn btn-default main-font" data-toggle="modal" data-target="#inventoryModal">Inventory</button>
         </div>
         <!---
         <div class="row">
@@ -55,21 +55,71 @@
     </div>
 </div>
 
-<!--Inventory Modal-->
+<!--Stats Modal-->
 <div class="modal fade" id="statsModal" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">@cChar.Name 's Inventory</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <h2>modal :)</h2>
+                <h2>@cChar.Name 's Stats</h2>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        Strength <span class="badge">@cChar.Strength</span>
+                    </li>
+                    <li class="list-group-item">
+                        Dexterity <span class="badge">@cChar.Dexterity</span>
+                    </li>
+                    <li class="list-group-item">
+                        Intelligence <span class="badge">@cChar.Intelligence</span>
+                    </li>
+                    <li class="list-group-item">
+                        Max Health <span class="badge">@cChar.MaxHealth</span>
+                    </li>
+                </ul>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><img src="~/images/Back_Button.png"/></button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><img src="~/images/Back_Button.png" /></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Inventory Modal-->
+<div class="modal fade" id="inventoryModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h2>@cChar.Name 's Inventory</h2>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        Strength
+                        <span class="badge">@cChar.Strength</span>
+                    </li>
+                    <li class="list-group-item">
+                        Dexterity
+                        <span class="badge">@cChar.Dexterity</span>
+                    </li>
+                    <li class="list-group-item">
+                        Intelligence
+                        <span class="badge">@cChar.Intelligence</span>
+                    </li>
+                    <li class="list-group-item">
+                        Max Health
+                        <span class="badge">@cChar.MaxHealth</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><img src="~/images/Back_Button.png" /></button>
             </div>
         </div>
     </div>
