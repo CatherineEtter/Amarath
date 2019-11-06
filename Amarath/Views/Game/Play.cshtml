@@ -11,10 +11,12 @@
 @{
     //Get the logged in user and their character
     var optionsBuilder = new DbContextOptionsBuilder<AmarathContext>();
-    var dbContext = new AmarathContext(optionsBuilder.Options);
+    var db = new AmarathContext(optionsBuilder.Options);
 
     var cUser = await userManager.GetUserAsync(User);
-    var cChar = dbContext.Characters.First(x => x.UserId == cUser.Id);
+    var cChar = db.Characters.First(x => x.UserId == cUser.Id);
+    //var cInventory = db.Inventories.All(x => x.CharID == cChar.CharId);
+    var cInventory = db.Inventories.Select(x => x.CharID == cChar.CharId);
 }
 <style>
     html, body {
@@ -99,24 +101,10 @@
             </div>
             <div class="modal-body">
                 <h2>@cChar.Name 's Inventory</h2>
-                <ul class="list-group">
-                    <li class="list-group-item">
-                        Strength
-                        <span class="badge">@cChar.Strength</span>
-                    </li>
-                    <li class="list-group-item">
-                        Dexterity
-                        <span class="badge">@cChar.Dexterity</span>
-                    </li>
-                    <li class="list-group-item">
-                        Intelligence
-                        <span class="badge">@cChar.Intelligence</span>
-                    </li>
-                    <li class="list-group-item">
-                        Max Health
-                        <span class="badge">@cChar.MaxHealth</span>
-                    </li>
-                </ul>
+                @foreach(var item in cInventory)
+                {
+                    <div>Item</div>
+                }
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal"><img src="~/images/Back_Button.png" /></button>
