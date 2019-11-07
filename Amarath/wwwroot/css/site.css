@@ -79,6 +79,9 @@ body {
 .btn-outline:hover, .btn-outline:active{
     text-decoration: none;
 }
+.list-group-item {
+    background-color: transparent;
+}
 .light-text {
     color: #e6e6e6;
 }
@@ -97,4 +100,35 @@ body {
     width: 100%;
     height: 80px;
     background-color: #998dc9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.game-modal {
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #808080;
+}
+.game-dialog-box {
+    color: #e8e8e8;
+    font: 12px monaco, consolas;
+}
+.game-action-box {
+    background-color: #272727;
+    color: #f5f5f5;
+    font: 12px monaco, consolas;
+}
+.main-font {
+    font: bold 18px copperplate, verdana;
+}
+.main-font-sm {
+    font: bold 10px copperplate, verdana;
+}
+.body-font {
+    font: 18px monaco, consolas;
+}
+.body-font-sm {
+    font-size: 12px;
+}
+.max-width {
+    width: 100%;
 }

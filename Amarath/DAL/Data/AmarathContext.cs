@@ -36,5 +36,7 @@ namespace Amarath.DAL.Data
         public DbSet<Customer> Customers { get; set; }
 
         public DbSet<Character> Characters { get; set; }
+        public DbSet<Item> Items { get; set; }
+        public DbSet<Inventory> Inventories { get; set; }
     }
 }

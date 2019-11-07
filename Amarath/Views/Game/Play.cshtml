@@ -11,10 +11,11 @@
 @{
     //Get the logged in user and their character
     var optionsBuilder = new DbContextOptionsBuilder<AmarathContext>();
-    var dbContext = new AmarathContext(optionsBuilder.Options);
+    var db = new AmarathContext(optionsBuilder.Options);
 
     var cUser = await userManager.GetUserAsync(User);
-    var cChar = dbContext.Characters.First(x => x.UserId == cUser.Id);
+    var cChar = db.Characters.First(x => x.UserId == cUser.Id);
+    var cInventory = db.Inventories.Where(x => x.CharID == cChar.CharId);
 }
 <style>
     html, body {
@@ -26,31 +27,119 @@
         padding: 0px;
     }
 </style>
-<div class="game-container text-center">
+<div class="game-container text-center main-font">
     <div class="game-header">
-        <div class="row">
-            <span class="col-sm-2">@cChar.Name</span>
-            <span class="col-sm-1">Lvl. @cChar.Rank</span>
-            <span class="col-sm-6">Health</span>
-            <button class="col-sm-2 btn btn-default">Stats</button>
+        <div class="row max-width">
+            <div class="col-md-3">@cChar.Name</div>
+            <div class="col-md-6">Health</div>
+            <div class="col-md-3">Level @cChar.Rank</div>
         </div>
     </div>
     <div class="row">
         <div class="col-md-8">Left</div>
-        <div class="col-md-4">Right</div>
+        <div class="col-md-4 game-action-box">Right</div>
     </div>
     <div class="game-footer">
-        <div class="row">
-            <div class="col-sm-8">
-                <input value="test" />
+        <div class="row max-width">
+            <div class="col-md-6">
+                <input class="body-font" type="text" value="test" />
+                <button class="btn btn-default">Enter</button>
             </div>
-            <button class="col-sm-2 btn btn-default">Inventory</button>
+            <div class="col-md-3">
+                <button class="btn btn-default main-font" data-toggle="modal" data-target="#inventoryModal">Inventory</button>
+            </div>
+            <div class="col-md-3">
+                <button class="btn btn-default main-font" data-toggle="modal" data-target="#statsModal">Stats</button>
+            </div>
         </div>
-        <!---
-        <div class="row">
-            <input class="col-md-8" value="Test"/>
-            <button class="col-md-4 btn btn-default">Inventory</button>
+    </div>
+</div>
+
+<!--Stats Modal-->
+<div class="modal fade" id="statsModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content game-modal">
+            <div class="modal-header">
+                <h2>@cChar.Name 's Stats</h2>
+            </div>
+            <div class="modal-body">
+                <div class="row main-font-sm">
+                    <div class="col-md-6">Stat</div>
+                    <div class="col-md-3">Base</div>
+                    <div class="col-md-3">Total</div>
+                </div>
+                <div class="body-font">
+                    <div class="row">
+                        <div class="col-md-6">Strength</div>
+                        <div class="col-md-3">@cChar.Strength</div>
+                        <div class="col-md-3">Total</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">Dexterity</div>
+                        <div class="col-md-3">@cChar.Dexterity</div>
+                        <div class="col-md-3">Total</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">Intelligence</div>
+                        <div class="col-md-3">@cChar.Intelligence</div>
+                        <div class="col-md-3">Total</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">Max Health</div>
+                        <div class="col-md-3">@cChar.MaxHealth</div>
+                        <div class="col-md-3">Total</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
+            </div>
         </div>
-        -->
+    </div>
+</div>
+
+<!--Inventory Modal-->
+<div class="modal fade" id="inventoryModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content game-modal">
+            <div class="modal-header">
+                <h2>@cChar.Name 's Inventory</h2>
+            </div>
+            <div class="modal-body">   
+                <div class="row main-font-sm">
+                    <div class="col-md-5">Name</div>
+                    <div class="col-md-1">Quantity</div>
+                    <div class="col-md-1">Type</div>
+                    <div class="col-md-1">Strength</div>
+                    <div class="col-md-1">Dexterity</div>
+                    <div class="col-md-1">Intelligence</div>
+                    <div class="col-md-1">Damage</div>
+                    <div class="col-md-1">Defense</div>
+                </div>
+                <div class="body-font">
+                    @foreach (var item in cInventory)
+                    {
+                        var detail = db.Items.First(x => x.ItemID == item.ItemID);
+                        <div class="row">
+                            <div class="col-md-5">@detail.Name</div>
+                            <div class="col-md-1">@item.Quantity</div>
+                            <div class="col-md-1">@detail.Type</div>
+                            <div class="col-md-1">@detail.Strength</div>
+                            <div class="col-md-1">@detail.Dexterity</div>
+                            <div class="col-md-1">@detail.Intelligence</div>
+                            <div class="col-md-1">@detail.Damage</div>
+                            <div class="col-md-1">@detail.Defense</div>
+                        </div>
+                        <div class="item-detail body-font-sm">
+                            <div><em>@detail.Description</em></div>
+                        </div>
+
+                    }
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
+            </div>
+        </div>
     </div>
 </div>
