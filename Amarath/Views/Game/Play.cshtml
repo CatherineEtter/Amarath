@@ -15,8 +15,6 @@
 
     var cUser = await userManager.GetUserAsync(User);
     var cChar = db.Characters.First(x => x.UserId == cUser.Id);
-    //var cInventory = db.Inventories.All(x => x.CharID == cChar.CharId);
-    //var cInventory = db.Inventories.Select(x => x.CharID == cChar.CharId);
     var cInventory = db.Inventories.Where(x => x.CharID == cChar.CharId);
 }
 <style>
@@ -31,30 +29,29 @@
 </style>
 <div class="game-container text-center main-font">
     <div class="game-header">
-        <div class="row">
-            <p class="col-sm-2">@cChar.Name</p>
-            <p class="col-sm-1">Lvl. @cChar.Rank</p>
-            <p class="col-sm-6">Health</p>
-            <button class="col-sm-2 btn btn-default main-font" data-toggle="modal" data-target="#statsModal">Stats</button>
+        <div class="row max-width">
+            <div class="col-md-3">@cChar.Name</div>
+            <div class="col-md-6">Health</div>
+            <div class="col-md-3">Level @cChar.Rank</div>
         </div>
     </div>
     <div class="row">
         <div class="col-md-8">Left</div>
-        <div class="col-md-4">Right</div>
+        <div class="col-md-4 game-action-box">Right</div>
     </div>
     <div class="game-footer">
-        <div class="row">
-            <div class="col-sm-8">
-                <input class="body-font" value="test" />
+        <div class="row max-width">
+            <div class="col-md-6">
+                <input class="body-font" type="text" value="test" />
+                <button class="btn btn-default">Enter</button>
             </div>
-            <button class="col-sm-2 btn btn-default main-font" data-toggle="modal" data-target="#inventoryModal">Inventory</button>
+            <div class="col-md-3">
+                <button class="btn btn-default main-font" data-toggle="modal" data-target="#inventoryModal">Inventory</button>
+            </div>
+            <div class="col-md-3">
+                <button class="btn btn-default main-font" data-toggle="modal" data-target="#statsModal">Stats</button>
+            </div>
         </div>
-        <!---
-        <div class="row">
-            <input class="col-md-8" value="Test"/>
-            <button class="col-md-4 btn btn-default">Inventory</button>
-        </div>
-        -->
     </div>
 </div>
 
@@ -66,20 +63,33 @@
                 <h2>@cChar.Name 's Stats</h2>
             </div>
             <div class="modal-body">
-                <ul class="list-group">
-                    <li class="list-group-item">
-                        Strength <span class="badge">@cChar.Strength</span>
-                    </li>
-                    <li class="list-group-item">
-                        Dexterity <span class="badge">@cChar.Dexterity</span>
-                    </li>
-                    <li class="list-group-item">
-                        Intelligence <span class="badge">@cChar.Intelligence</span>
-                    </li>
-                    <li class="list-group-item">
-                        Max Health <span class="badge">@cChar.MaxHealth</span>
-                    </li>
-                </ul>
+                <div class="row main-font-sm">
+                    <div class="col-md-6">Stat</div>
+                    <div class="col-md-3">Base</div>
+                    <div class="col-md-3">Total</div>
+                </div>
+                <div class="body-font">
+                    <div class="row">
+                        <div class="col-md-6">Strength</div>
+                        <div class="col-md-3">@cChar.Strength</div>
+                        <div class="col-md-3">Total</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">Dexterity</div>
+                        <div class="col-md-3">@cChar.Dexterity</div>
+                        <div class="col-md-3">Total</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">Intelligence</div>
+                        <div class="col-md-3">@cChar.Intelligence</div>
+                        <div class="col-md-3">Total</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">Max Health</div>
+                        <div class="col-md-3">@cChar.MaxHealth</div>
+                        <div class="col-md-3">Total</div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
@@ -95,8 +105,8 @@
             <div class="modal-header">
                 <h2>@cChar.Name 's Inventory</h2>
             </div>
-            <div class="modal-body main-font-sm">   
-                <div class="row">
+            <div class="modal-body">   
+                <div class="row main-font-sm">
                     <div class="col-md-5">Name</div>
                     <div class="col-md-1">Quantity</div>
                     <div class="col-md-1">Type</div>
