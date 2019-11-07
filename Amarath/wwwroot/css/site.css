@@ -2,16 +2,23 @@
 for details on configuring this project to bundle and minify static web assets. */
 body {
     padding-top: 50px;
-    padding-bottom: 20px;
+    /*padding-bottom: 20px;*/
 }
 
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
+
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
+    height: 100%;
+    width: 100%;
+    margin: 0px;
 }
-
+.margin-container {
+    margin-right: auto;
+    margin-left: auto;
+}
 /* Carousel */
 .carousel-caption p {
     font-size: 20px;
@@ -72,6 +79,56 @@ body {
 .btn-outline:hover, .btn-outline:active{
     text-decoration: none;
 }
+.list-group-item {
+    background-color: transparent;
+}
 .light-text {
     color: #e6e6e6;
+}
+.game-container {
+    margin: 0px;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(255,255,255,0.2);
+    position: relative;
+}
+.game-footer {
+    position: absolute;
+    bottom: 0px;
+}
+.game-footer, .game-header {
+    width: 100%;
+    height: 80px;
+    background-color: #998dc9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.game-modal {
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #808080;
+}
+.game-dialog-box {
+    color: #e8e8e8;
+    font: 12px monaco, consolas;
+}
+.game-action-box {
+    background-color: #272727;
+    color: #f5f5f5;
+    font: 12px monaco, consolas;
+}
+.main-font {
+    font: bold 18px copperplate, verdana;
+}
+.main-font-sm {
+    font: bold 10px copperplate, verdana;
+}
+.body-font {
+    font: 18px monaco, consolas;
+}
+.body-font-sm {
+    font-size: 12px;
+}
+.max-width {
+    width: 100%;
 }
