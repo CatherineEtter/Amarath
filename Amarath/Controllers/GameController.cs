@@ -23,9 +23,15 @@ namespace Amarath.Controllers
         {
             return View();
         }
-        public IActionResult Play()
+        public async Task<IActionResult> Play()
         {
-            ViewBag.Dialog = "bleh";
+            var optionsBuilder = new DbContextOptionsBuilder<AmarathContext>();
+            var db = new AmarathContext(optionsBuilder.Options);
+
+            var cUser = await userManager.GetUserAsync(User);
+            var cChar = db.Characters.First(x => x.UserId == cUser.Id);
+            var location = db.Locations.First(x => x.DungeonLevel == cChar.DungeonLevel);
+            ViewBag.Dialog = location.Description;
             return View();
         }
         public async Task<ActionResult> LevelUp()

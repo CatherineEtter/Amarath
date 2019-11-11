@@ -114,14 +114,14 @@ body {
 }
 #game-dialog-box {
     color: #e8e8e8;
-    font: 12px monaco, consolas;
+    font: 14px monaco, consolas;
     overflow: auto;
     height: 100%;
 }
 #game-action-box {
     background-color: #272727;
     color: #f5f5f5;
-    font: 12px monaco, consolas;
+    font: 14px monaco, consolas;
     overflow: auto; 
     height: 100%;
 }
