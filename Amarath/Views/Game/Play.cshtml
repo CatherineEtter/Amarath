@@ -41,14 +41,15 @@
         </div>
     </div>
     <div id="game-stage" class="row">
-        <div id="game-dialog-box" class="col-md-8">Left</div>
+        <div id="game-dialog-box" class="col-md-8">Left @ViewBag.Dialog</div>
         <div id="game-action-box" class="col-md-4">Right</div>
     </div>
     <div class="game-footer">
         <div class="row max-width">
             <div class="col-md-6">
                 <input class="body-font" type="text" value="test" />
-                <button class="btn btn-default" onclick="EnterResponse()">Enter</button>
+                <button class="btn btn-default" onclick="StartGame()">Enter</button>
+                <a asp-area="" asp-controller="Game" asp-action="LevelUp">Level Up</a>
             </div>
             <div class="col-md-3">
                 <button class="btn btn-default main-font" data-toggle="modal" data-target="#inventoryModal"> Inventory </button>
