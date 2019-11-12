@@ -14,8 +14,10 @@ namespace Amarath.DAL.Models
         public int Strength { get; set; }
         [Display(Name = "Dexterity")]
         public int Dexterity { get; set; }
+        [Display(Name = "Dexterity")]
+        public int Intelligence { get; set; }
         [Display(Name = "Health")]
-        public int Health { get; set; }
+        public int CurrentHealth { get; set; }
 
         [Required(ErrorMessage = "Character name is required")]
         [Display(Name = "Name")]
