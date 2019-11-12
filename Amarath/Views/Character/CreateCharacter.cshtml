@@ -1,9 +1,20 @@
 ﻿@model Amarath.DAL.Models.CharacterViewModel;
+@using Amarath.DAL.Models;
+@using Amarath.DAL.Data;
+@using Microsoft.EntityFrameworkCore;
+
+@inject UserManager<IdentityUserExt> userManager;
 
 @{
     ViewData["Title"] = "CreateCharacter";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    
+
+    // Retrieve the different classes
+    var optionsBuilder = new DbContextOptionsBuilder<AmarathContext>();
+    var db = new AmarathContext(optionsBuilder.Options);
+
+    var cUser = await userManager.GetUserAsync(User);
+    var classes = db.Classes;
 }
 
 <div class="container">
@@ -11,44 +22,26 @@
     <form method="post">
         <div class="row">
             <div class="col-sm-5 col-md-5">
-                <div id="carousel-example-generic" class="carousel slide" data-ride="carousel" data-interval="false">
+                <div id="classList" class="carousel slide" data-ride="carousel" data-interval="false">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner" role="listbox">
-                        <div class="item active">
-                            <img src="https://www.macmillandictionary.com/external/slideshow/full/Grey_full.png" alt="...">
-                            <div class="carousel-caption">
-                                <h4>Warrior</h4>
-                                <h6>Rah!</h6>
+                        @foreach (var c in classes)
+                        {
+                            <div class="item @(classes.First() == c ? "active" : String.Empty)" id="@c.ClassTypeID">
+                                <img src="https://www.macmillandictionary.com/external/slideshow/full/Grey_full.png" alt="...">
+                                <div class="carousel-caption">
+                                    <h4>@c.Name</h4>
+                                    <h6>@c.Description</h6>
+                                </div>
                             </div>
-                        </div>
-                        <div class="item">
-                            <img src="https://www.macmillandictionary.com/external/slideshow/full/Grey_full.png" alt="...">
-                            <div class="carousel-caption">
-                                <h4>Archer</h4>
-                                <h6>Whoosh</h6>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <img src="https://www.macmillandictionary.com/external/slideshow/full/Grey_full.png" alt="...">
-                            <div class="carousel-caption">
-                                <h4>Mage</h4>
-                                <h6>*Twinkle*</h6>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <img src="https://www.macmillandictionary.com/external/slideshow/full/Grey_full.png" alt="...">
-                            <div class="carousel-caption">
-                                <h4>Rogue</h4>
-                                <h6>...</h6>
-                            </div>
-                        </div>
+                        }
                     </div>
                     <!-- Controls -->
-                    <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                    <a class="left carousel-control" href="#classList" role="button" data-slide="prev" onclick="">
                         <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
                         <span class="sr-only">Previous</span>
                     </a>
-                    <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                    <a class="right carousel-control" href="#classList" role="button" data-slide="next" onclick="">
                         <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
                         <span class="sr-only">Next</span>
                     </a>
@@ -76,49 +69,57 @@
                     </div>
                     <table class="table">
                         <tr>
-                            <th class="col-sm-10 col-md-10">Points Assigned</th>
-                            <th class="col-sm-1 col-md-1">Points</th>
+                            <th class="col-sm-9 col-md-9">Points Assigned</th>
+                            <th class="col-sm-2 col-md-2">Points</th>
                             <th class="col-sm-1 col-md-1">Skill Name</th>
                         </tr>
-                        <tr>
-                            <td>
-                                <button type="button" class="btn col-sm-1 col-md-1" id="decStrength" onclick="updateSkill(this.id);" asp-action="decStrength"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></button>
-                                <div class="col-sm-9 col-md-9">
-                                    <div class="progress">
-                                        <div class="progress-bar" role="progressbar" id="StrengthBar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                        @foreach (var c in classes) {
+                            <tr id="SSect@(c.ClassTypeID)" name="skills" @(classes.First() == c ? String.Empty : "hidden")>
+                                <td>
+                                    <a class="btn btn-lg col-sm-1 col-md-1 glyphicon glyphicon-minus-sign" id="decSBar@(c.ClassTypeID)" onclick="updateSkill(this.id);" style="padding:0px;"></a>
+                                    <div class="col-sm-9 col-md-9">
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar" id="SBar@(c.ClassTypeID)" aria-valuenow="@(c.Strength)" aria-valuemin="@(c.Strength)" aria-valuemax="100" style="width: @( c.Strength)%;"></div>
+                                        </div>
                                     </div>
-                                </div>
-                                <button type="button" class="btn col-sm-1 col-md-1" id="incStrength" onclick="updateSkill(this.id);"><span class="text-center glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
-                            </td>
-                            <td><input type="text" asp-for="Strength" id="Strength" class="form-control text-center" value="0" disabled/></td>
-                            <td>Strength</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <button type="button" class="btn col-sm-1 col-md-1" id="decDexterity" onclick="updateSkill(this.id);"><span class="text-center glyphicon glyphicon-chevron-left" aria-hidden="true"></span></button>
-                                <div class="col-sm-9 col-md-9">
-                                    <div class="progress">
-                                        <div class="progress-bar" role="progressbar" id="DexterityBar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                                    <a class="btn btn-lg col-sm-1 col-md-1 glyphicon glyphicon-plus-sign" id="incSBar@(c.ClassTypeID)" onclick="updateSkill(this.id);" style="padding:0px;"></a>
+                                </td>
+                                <td>
+                                    <input type="text" asp-for="Strength" id="S@(c.ClassTypeID)" class="form-control text-center" value="@(c.Strength)" disabled />
+                                </td>
+                                <td>Strength</td>
+                            </tr>
+                            <tr id="DSect@(c.ClassTypeID)" name="skills" @(classes.First() == c ? String.Empty : "hidden")>
+                                <td>
+                                    <a class="btn btn-lg col-sm-1 col-md-1 glyphicon glyphicon-minus-sign" id="decDBar@(c.ClassTypeID)" onclick="updateSkill(this.id);" style="padding:0px;"></a>
+                                    <div class="col-sm-9 col-md-9">
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar" id="DBar@(c.ClassTypeID)" aria-valuenow="@(c.Dexterity)" aria-valuemin="@(c.Dexterity)" aria-valuemax="100" style="width: @(c.Dexterity)%;"></div>
+                                        </div>
                                     </div>
-                                </div>
-                                <button type="button" class="btn col-sm-1 col-md-1" id="incDexterity" onclick="updateSkill(this.id);"><span class="text-center glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
-                            </td>
-                            <td><input type="text" asp-for="Dexterity" class="form-control text-center" value="0" disabled /></td>
-                            <td>Dexterity</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <button type="button" class="btn col-sm-1 col-md-1" id="decIntelligence" onclick="updateSkill(this.id);"><span class="text-center glyphicon glyphicon-chevron-left" aria-hidden="true"></span></button>
-                                <div class="col-sm-9 col-md-9">
-                                    <div class="progress">
-                                        <div class="progress-bar" role="progressbar" id="IntelligenceBar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                                    <a class="btn btn-lg col-sm-1 col-md-1 glyphicon glyphicon-plus-sign" id="incDBar@(c.ClassTypeID)" onclick="updateSkill(this.id);" style="padding:0px;"></a>
+                                </td>
+                                <td>
+                                    <input type="text" asp-for="Dexterity" id="D@(c.ClassTypeID)" class="form-control text-center" value="@(c.Dexterity)" disabled />
+                                </td>
+                                <td>Dexterity</td>
+                            </tr>
+                            <tr id="ISect@(c.ClassTypeID)" name="skills" @(classes.First() == c ? String.Empty : "hidden")>
+                                <td>
+                                    <a class="btn btn-lg col-sm-1 col-md-1 glyphicon glyphicon-minus-sign" id="decIBar@(c.ClassTypeID)" onclick="updateSkill(this.id);" style="padding:0px;"></a>
+                                    <div class="col-sm-9 col-md-9">
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar" id="IBar@(c.ClassTypeID)" aria-valuenow="@(c.Intelligence)" aria-valuemin="@(c.Intelligence)" aria-valuemax="100" style="width: @(c.Intelligence)%;"></div>
+                                        </div>
                                     </div>
-                                </div>
-                                <button type="button" class="btn col-sm-1 col-md-1" id="incIntelligence" onclick="updateSkill(this.id);"><span class="text-center glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
-                            </td>
-                            <td><input type="text" class="form-control text-center" id="Intelligence" value="0" disabled /></td>
-                            <td>Intelligence</td>
-                        </tr>
+                                    <a class="btn btn-lg col-sm-1 col-md-1 glyphicon glyphicon-plus-sign" id="incSBar@(c.ClassTypeID)" onclick="updateSkill(this.id);" style="padding:0px;"></a>
+                                </td>
+                                <td>
+                                    <input type="text" asp-for="Intelligence" id="I@(c.ClassTypeID)" class="form-control text-center" value="@(c.Intelligence)" disabled/>
+                                </td>
+                                <td>Intelligence</td>
+                            </tr>
+                        }
                         <tr>
                             <td>
                                 <div class="col-sm-1 col-md-1"></div>
@@ -129,60 +130,64 @@
                                 </div>
                                 <div class="col-sm-1 col-md-1"></div>
                             </td>
-                            <td><input type="text" asp-for="Health" class="form-control text-center" value="100" disabled /></td>
+                            <td><input type="text" asp-for="CurrentHealth" class="form-control text-center" value="100" disabled /></td>
                             <td>Health</td>
                         </tr>
                     </table>
-                    <!--
-                    <p class="lead">Skills</p>
-                    <div id="SkillsTable">
-                        <div class="media">
-                            <div class="media-left">
-                                <img class="media-object" src="...">
-                            </div>
-                            <div class="media-body">
-                                Skill description
-                            </div>
-                        </div>
-                    </div>
-                    -->
                 </div>
             </div>
         </div>
         <div class="row">
-            <input class="btn btn-primary pull-right" type="submit" style="margin-right:1em;" asp-area="" asp-controller="Character" asp-action="CreateCharacter"/>
+            <input class="btn btn-primary pull-right" type="submit" style="margin-right:1em;" asp-area="" asp-controller="Character" asp-action="CreateCharacter" value="" />
         </div>
     </form>
 </div>
 
-<script type="text/javascript">
+<script>
     var maxNewPoints = 20;
     window.onload = function () {
-      $("#pointCount").text(Number(maxNewPoints));
+        $("#pointCount").text(Number(maxNewPoints));
+        $("#pointBar").attr('aria-valuenow', maxNewPoints);
+        $("#pointBar").attr('aria-valuemax', maxNewPoints);
+
+        $("#classList").bind('slid.bs.carousel', function (event) {
+            var currClass = $("#classList .active")[0].id;
+            $('[name="skills"]').attr("hidden", "");
+            $("#SSect" + currClass).removeAttr("hidden");
+            $("#DSect" + currClass).removeAttr("hidden");
+            $("#ISect" + currClass).removeAttr("hidden");
+        });
     };
 
-    function updateSkill(id) {
-        var command = id.split(/(?=[A-Z])/);
-        var operator = command[0];
-        var skill = "#" + command[1];
 
-        // Increment or Decrement skill points
-        if (operator == "inc" && ($(skill).val() < 100) && (Number($("#pointCount").text()) > 0) ){
-            $(skill).val(Number($(skill).val()) + 1);
-            $("#pointCount").text( Number($("#pointCount").text()) - 1 );
+    function updateSkill(id) {
+        var operator = id.substring(0, 3); // inc, dec
+        var skill = id.substring(3, 4); // S, D, I
+        var classId = id.substring(id.length - 1); // 1, 2, 3, ...
+        var progressBar = "#" + id.substring(3);
+
+        if (operator == "inc" && Number($(progressBar).attr('aria-valuenow')) < Number($(progressBar).attr('aria-valuemax'))
+            && Number($("#pointBar").attr("aria-valuenow")) > 0
+        )
+        {
+            $(progressBar).attr('aria-valuenow', Number($(progressBar).attr('aria-valuenow')) + 1);
+            $(progressBar).attr("style", "width:" + Number($(progressBar).attr('aria-valuenow')) + "%;");
+            $("#"+skill+classId).val($(progressBar).attr('aria-valuenow'));
+            $("#pointCount").text(Number($("#pointCount").text()) - 1);
         }
-        else if (operator == "dec" && ($(skill).val() > 0) && (Number($("#pointCount").text()) < maxNewPoints)){
-            $(skill).val(Number($(skill).val()) - 1);
-            $("#pointCount").text( Number($("#pointCount").text()) + 1 );
+        else if (operator == "dec" && Number($(progressBar).attr('aria-valuenow')) > Number($(progressBar).attr('aria-valuemin'))
+            && Number($("#pointBar").attr("aria-valuenow")) < maxNewPoints
+        )
+        {
+            $(progressBar).attr('aria-valuenow', Number($(progressBar).attr('aria-valuenow')) - 1);
+            $(progressBar).attr("style", "width:" + Number($(progressBar).attr('aria-valuenow')) + "%;");
+            $("#"+skill+classId).val($(progressBar).attr('aria-valuenow'));
+            $("#pointCount").text(Number($("#pointCount").text()) + 1);
         }
 
         // Update total points available
         $("#pointBar").attr("aria-valuenow", Number($("#pointCount").text()));
-        $("#pointBar").attr("style", "width:" + (Number($("#pointCount").text()) / maxNewPoints)*100 + "%;");
-
-        // Update input element values
-        $(skill+"Bar").attr("aria-valuenow", $(skill).val());
-        $(skill+"Bar").attr("style", "width:"+$(skill).val()+"%;");
+        $("#pointBar").attr('aria-valuemax', Number($("#pointCount").text()));
+        $("#pointBar").attr("style", "width:" + (Number($("#pointCount").text()) / maxNewPoints) * 100 + "%;");
     }
-
 </script>
