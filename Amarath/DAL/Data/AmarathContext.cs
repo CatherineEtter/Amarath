@@ -38,5 +38,6 @@ namespace Amarath.DAL.Data
         public DbSet<Class> Classes { get; set; }
         public DbSet<Item> Items { get; set; }
         public DbSet<Inventory> Inventories { get; set; }
+        public DbSet<WeaponType> WeaponTypes { get; set; }
     }
 }
