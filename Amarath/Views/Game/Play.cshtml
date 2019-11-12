@@ -41,8 +41,18 @@
         </div>
     </div>
     <div id="game-stage" class="row text-left">
-        <div id="game-dialog-box" class="col-md-8">@ViewBag.Dialog</div>
-        <div id="game-action-box" class="col-md-4">@ViewBag.Action</div>
+        <div id="game-dialog-box" class="col-md-8">
+                @foreach (KeyValuePair<string, string> item in ViewBag.Dialog)
+                {
+                    <span style="color: @item.Value">@item.Key</span><br />
+                }
+            </div>
+        <div id="game-action-box" class="col-md-4">
+            @foreach (KeyValuePair<string, string> item in ViewBag.Action)
+            {
+                <span style="color: @item.Value">@item.Key</span><br />
+            }
+        </div>
     </div>
     <div class="game-footer">
         <div class="row max-width">
