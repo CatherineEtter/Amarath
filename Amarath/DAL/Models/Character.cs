@@ -22,5 +22,7 @@ namespace Amarath.Models
         public int Intelligence { get; set; }
         public int MaxHealth { get; set; }
         public int CurrentHealth { get; set; }
+        public int Experience { get; set; }
+        public int DungeonLevel { get; set; }
     }
 }

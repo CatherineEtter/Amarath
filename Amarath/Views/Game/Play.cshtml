@@ -27,6 +27,11 @@
         padding: 0px;
     }
 </style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        StartGame();
+    });
+</script>
 <div class="game-container text-center main-font">
     <div class="game-header">
         <div class="row max-width">
@@ -35,21 +40,32 @@
             <div class="col-md-3">Level @cChar.Rank</div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-8">Left</div>
-        <div class="col-md-4 game-action-box">Right</div>
+    <div id="game-stage" class="row text-left">
+        <div id="game-dialog-box" class="col-md-8">
+                @foreach (KeyValuePair<string, string> item in ViewBag.Dialog)
+                {
+                    <span style="color: @item.Value">@item.Key</span><br />
+                }
+            </div>
+        <div id="game-action-box" class="col-md-4">
+            @foreach (KeyValuePair<string, string> item in ViewBag.Action)
+            {
+                <span style="color: @item.Value">@item.Key</span><br />
+            }
+        </div>
     </div>
     <div class="game-footer">
         <div class="row max-width">
             <div class="col-md-6">
                 <input class="body-font" type="text" value="test" />
-                <button class="btn btn-default">Enter</button>
+                <button class="btn btn-default" onclick="StartGame()">Enter</button>
+                <a asp-area="" asp-controller="Game" asp-action="LevelUp">Level Up</a>
             </div>
             <div class="col-md-3">
-                <button class="btn btn-default main-font" data-toggle="modal" data-target="#inventoryModal">Inventory</button>
+                <button class="btn btn-default main-font" data-toggle="modal" data-target="#inventoryModal"> Inventory </button>
             </div>
             <div class="col-md-3">
-                <button class="btn btn-default main-font" data-toggle="modal" data-target="#statsModal">Stats</button>
+                <button class="btn btn-default main-font" data-toggle="modal" data-target="#statsModal"> Stats </button>
             </div>
         </div>
     </div>
