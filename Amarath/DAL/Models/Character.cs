@@ -13,7 +13,6 @@ namespace Amarath.Models
         [Key]
         public int CharId { get; set; }
         public string UserId { get; set; }
-        public int InventoryId { get; set; }
         public int ClassTypeId { get; set; }
         public string Name { get; set; }
         public int Rank { get; set; }
