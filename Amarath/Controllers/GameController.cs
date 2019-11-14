@@ -17,6 +17,7 @@ namespace Amarath.Controllers
         // For coloring messages
         private string normal = "#FFFFFF";
         private string danger = "#FF0000";
+        private string player = "#FFFF00";
         private string options = "#66ffcc";
 
         public GameController(UserManager<IdentityUserExt> userManager)
@@ -40,6 +41,8 @@ namespace Amarath.Controllers
             ViewBag.Dialog = location.Description;
             ViewBag.Action = "You entered " + location.Name + " ( Dungeon Level " + location.DungeonLevel + " )";
             */
+
+            //Session["Test"] = 9;
             ViewBag.DungeonLevel = location.DungeonLevel;
             ViewBag.Dialog = new List<KeyValuePair<string, string>>();
             ViewBag.Dialog.Add(new KeyValuePair<string, string>(location.Description, normal));
@@ -51,6 +54,7 @@ namespace Amarath.Controllers
             GenerateOptions();
             return View();
         }
+
         public async Task<ActionResult> LevelUp()
         {
             var optionsBuilder = new DbContextOptionsBuilder<AmarathContext>();
@@ -61,6 +65,8 @@ namespace Amarath.Controllers
             cChar.Rank += 1;
 
             db.SaveChanges();
+
+            ViewBag.Actions.Add(new KeyValuePair<string, string>("You are now level " + cChar.Rank + "!", normal));
 
             return RedirectToAction("Play", "Game");
         }
@@ -92,6 +98,13 @@ namespace Amarath.Controllers
             ViewBag.Dialog.Add(new KeyValuePair<string, string>(" - Attack", options));
             ViewBag.Dialog.Add(new KeyValuePair<string, string>(" - Run", options));
 
+            return View();
+        }
+
+        public ViewResult PlayerCommand()
+        {
+            ViewBag.Dialog.Add(new KeyValuePair<string, string>("Test", player));
+            //ViewBag.Test = player;
             return View();
         }
     }

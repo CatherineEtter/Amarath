@@ -2,6 +2,7 @@
 @using Amarath.DAL.Data;
 @using Microsoft.EntityFrameworkCore;
 
+
 @inject UserManager<IdentityUserExt> userManager;
 
 @{
@@ -42,11 +43,11 @@
     </div>
     <div id="game-stage" class="row text-left">
         <div id="game-dialog-box" class="col-md-8">
-                @foreach (KeyValuePair<string, string> item in ViewBag.Dialog)
-                {
-                    <span style="color: @item.Value">@item.Key</span><br />
-                }
-            </div>
+            @foreach (KeyValuePair<string, string> item in ViewBag.Dialog)
+            {
+                <span style="color: @item.Value">@item.Key</span><br />
+            }
+        </div>
         <div id="game-action-box" class="col-md-4">
             @foreach (KeyValuePair<string, string> item in ViewBag.Action)
             {
@@ -57,8 +58,20 @@
     <div class="game-footer">
         <div class="row max-width">
             <div class="col-md-6">
-                <input class="body-font" type="text" value="test" />
-                <button class="btn btn-default" onclick="StartGame()">Enter</button>
+                <!--
+                @using (Html.BeginForm("PlayerCommand", "Game"))
+                {
+                    <input class="body-font" type="text" />
+                    <input type="submit" value="Enter" />
+                }
+                <button class="btn btn-default" onclick="PlayerCommand()">Test</button>
+                    -->
+
+
+                <!---
+    <input" class="body-font" type="text" value="test" />
+    <button class="btn btn-default" onclick="StartGame()">Enter</button>
+    -->
                 <a asp-area="" asp-controller="Game" asp-action="LevelUp">Level Up</a>
             </div>
             <div class="col-md-3">
@@ -121,7 +134,7 @@
             <div class="modal-header">
                 <h2>@cChar.Name 's Inventory</h2>
             </div>
-            <div class="modal-body">   
+            <div class="modal-body">
                 <div class="row main-font-sm">
                     <div class="col-md-5">Name</div>
                     <div class="col-md-1">Quantity</div>
