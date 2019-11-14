@@ -1,6 +1,9 @@
 ﻿@using Amarath.DAL.Models;
 @using Amarath.DAL.Data;
 @using Microsoft.EntityFrameworkCore;
+@using Microsoft.AspNetCore.Http;
+@using Newtonsoft.Json;
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 
 
 @inject UserManager<IdentityUserExt> userManager;
@@ -43,21 +46,28 @@
     </div>
     <div id="game-stage" class="row text-left">
         <div id="game-dialog-box" class="col-md-8">
-            @foreach (KeyValuePair<string, string> item in ViewBag.Dialog)
-            {
-                <span style="color: @item.Value">@item.Key</span><br />
+            @{
+                var dialog = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(HttpContextAccessor.HttpContext.Session.GetString("Dialog"));
+                @foreach (KeyValuePair<string, string> item in dialog)
+                {
+                    <span style="color: @item.Value">@item.Key</span><br />
+                }
             }
         </div>
         <div id="game-action-box" class="col-md-4">
-            @foreach (KeyValuePair<string, string> item in ViewBag.Action)
-            {
-                <span style="color: @item.Value">@item.Key</span><br />
+            @{
+                var action = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(HttpContextAccessor.HttpContext.Session.GetString("Action"));
+                @foreach (KeyValuePair<string, string> item in action)
+                {
+                    <span style="color: @item.Value">@item.Key</span><br />
+                }
             }
         </div>
     </div>
     <div class="game-footer">
         <div class="row max-width">
             <div class="col-md-6">
+                <button class="btn btn-default" onclick="PlayerCommand()">Enter</button>
                 <!--
                 @using (Html.BeginForm("PlayerCommand", "Game"))
                 {
@@ -66,12 +76,10 @@
                 }
                 <button class="btn btn-default" onclick="PlayerCommand()">Test</button>
                     -->
-
-
                 <!---
-    <input" class="body-font" type="text" value="test" />
-    <button class="btn btn-default" onclick="StartGame()">Enter</button>
-    -->
+                <input" class="body-font" type="text" value="test" />
+                <button class="btn btn-default" onclick="StartGame()">Enter</button>
+                -->
                 <a asp-area="" asp-controller="Game" asp-action="LevelUp">Level Up</a>
             </div>
             <div class="col-md-3">

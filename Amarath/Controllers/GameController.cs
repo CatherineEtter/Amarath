@@ -7,6 +7,8 @@ using Amarath.DAL.Models;
 using Amarath.DAL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace Amarath.Controllers
 {
@@ -15,10 +17,10 @@ namespace Amarath.Controllers
         private readonly UserManager<IdentityUserExt> userManager;
 
         // For coloring messages
-        private string normal = "#FFFFFF";
-        private string danger = "#FF0000";
-        private string player = "#FFFF00";
-        private string options = "#66ffcc";
+        private string txtNormal = "#FFFFFF";
+        private string txtDanger = "#FF0000";
+        private string txtPlayer = "#FFFF00";
+        private string txtOptions = "#66ffcc";
 
         public GameController(UserManager<IdentityUserExt> userManager)
         {
@@ -37,19 +39,19 @@ namespace Amarath.Controllers
             var cUser = await userManager.GetUserAsync(User);
             var cChar = db.Characters.First(x => x.UserId == cUser.Id);
             var location = db.Locations.First(x => x.DungeonLevel == cChar.DungeonLevel);
-            /*
-            ViewBag.Dialog = location.Description;
-            ViewBag.Action = "You entered " + location.Name + " ( Dungeon Level " + location.DungeonLevel + " )";
-            */
 
-            //Session["Test"] = 9;
-            ViewBag.DungeonLevel = location.DungeonLevel;
-            ViewBag.Dialog = new List<KeyValuePair<string, string>>();
-            ViewBag.Dialog.Add(new KeyValuePair<string, string>(location.Description, normal));
-
-            ViewBag.Action = new List<KeyValuePair<string, string>>();
-            ViewBag.Action.Add(new KeyValuePair<string, string>("You entered " + location.Name + "(Dungeon Level " + location.DungeonLevel + ")", normal));
-            
+            List<KeyValuePair<string, string>> listDialog = null;
+            List<KeyValuePair<string, string>> listAction = null;
+            if (HttpContext.Session.GetString("Dialog") == null)
+            {
+                listDialog = new List<KeyValuePair<string, string>>();
+                listAction = new List<KeyValuePair<string, string>>();
+                listDialog.Add(new KeyValuePair<string, string>(location.Description, txtNormal));
+                listAction.Add(new KeyValuePair<string, string>("You entered " + location.Name + "(Dungeon Level " + location.DungeonLevel + ")", txtNormal));
+                HttpContext.Session.SetString("Dialog", JsonConvert.SerializeObject(listDialog));
+                HttpContext.Session.SetString("Action", JsonConvert.SerializeObject(listAction));
+                HttpContext.Session.SetString("DungeonLevel", location.DungeonLevel.ToString());
+            }
 
             GenerateOptions();
             return View();
@@ -57,16 +59,19 @@ namespace Amarath.Controllers
 
         public async Task<ActionResult> LevelUp()
         {
+            //Increment player level
             var optionsBuilder = new DbContextOptionsBuilder<AmarathContext>();
             var db = new AmarathContext(optionsBuilder.Options);
 
             var cUser = await userManager.GetUserAsync(User);
             var cChar = db.Characters.First(x => x.UserId == cUser.Id);
             cChar.Rank += 1;
-
             db.SaveChanges();
 
-            ViewBag.Actions.Add(new KeyValuePair<string, string>("You are now level " + cChar.Rank + "!", normal));
+            //Add Message to action list
+            var listAction = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(HttpContext.Session.GetString("Action"));
+            listAction.Add(new KeyValuePair<string, string>("You are now level " + cChar.Rank, txtPlayer));
+            HttpContext.Session.SetString("Action", JsonConvert.SerializeObject(listAction));
 
             return RedirectToAction("Play", "Game");
         }
@@ -75,36 +80,40 @@ namespace Amarath.Controllers
 
             var rand = new Random();
             int randNum = rand.Next(1, 2);
-            if(ViewBag.DungeonLevel == 0)
+            var listDialog = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(HttpContext.Session.GetString("Dialog"));
+
+            if (Convert.ToInt32(HttpContext.Session.GetString("DungeonLevel"))  == 0)
             {
-                ViewBag.Dialog.Add(new KeyValuePair<string, string>(" - Proceed", options));
+                listDialog.Add(new KeyValuePair<string, string>(" - Proceed", txtOptions));
             }
             else if(randNum == 1)
             {
-                ViewBag.Dialog.Add(new KeyValuePair<string, string>("You enter and look around.", normal));
-                ViewBag.Dialog.Add(new KeyValuePair<string, string>(" - Leave", options));
-                ViewBag.Dialog.Add(new KeyValuePair<string, string>(" - Explore", options));
+                listDialog.Add(new KeyValuePair<string, string>("You enter and look around.", txtNormal));
+                listDialog.Add(new KeyValuePair<string, string>(" - Leave", txtOptions));
+                listDialog.Add(new KeyValuePair<string, string>(" - Explore", txtOptions));
             } else
             {
                 StartBattle();
             }
-
-            
+            HttpContext.Session.SetString("Dialog", JsonConvert.SerializeObject(listDialog));
         }
 
         public ViewResult StartBattle()
         {
-            ViewBag.Action.Add(new KeyValuePair<string, string>("A monster appears!", danger));
-            ViewBag.Dialog.Add(new KeyValuePair<string, string>(" - Attack", options));
-            ViewBag.Dialog.Add(new KeyValuePair<string, string>(" - Run", options));
+            var listDialog = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(HttpContext.Session.GetString("Dialog"));
+
+            listDialog.Add(new KeyValuePair<string, string>("A monster appears!", txtDanger));
+            listDialog.Add(new KeyValuePair<string, string>(" - Attack", txtOptions));
+            listDialog.Add(new KeyValuePair<string, string>(" - Run", txtOptions));
+
+            HttpContext.Session.SetString("Dialog", JsonConvert.SerializeObject(listDialog));
 
             return View();
         }
 
         public ViewResult PlayerCommand()
         {
-            ViewBag.Dialog.Add(new KeyValuePair<string, string>("Test", player));
-            //ViewBag.Test = player;
+
             return View();
         }
     }

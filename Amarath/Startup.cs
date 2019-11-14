@@ -14,6 +14,7 @@ using Amarath.DAL.Data;
 using Amarath.DAL.Models;
 using Microsoft.AspNetCore.Identity;
 
+
 namespace Amarath
 {
     public class Startup
@@ -34,8 +35,8 @@ namespace Amarath
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-
-
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); //To access Session in views
+            services.AddSession();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddIdentity<IdentityUserExt, IdentityRole>().AddEntityFrameworkStores<AmarathContext>();
@@ -77,7 +78,7 @@ namespace Amarath
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseAuthentication();
-
+            app.UseSession();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
