@@ -19,7 +19,7 @@
 
 <div class="container">
     <div class="row page-header"><h2>Create Your Character</h2></div>
-    <form method="post">
+    <form method="post" runat="server">
         <div class="row">
             <div class="col-sm-5 col-md-5">
                 <div id="classList" class="carousel slide" data-ride="carousel" data-interval="false">
@@ -46,17 +46,20 @@
                         <span class="sr-only">Next</span>
                     </a>
                 </div>
+                <input hidden id="classType" type="number" asp-for="ClassTypeId" value="1" />
             </div>
             <div class="col-sm-7 col-md-7">
                 <div class="well">
                     <div class="row">
                         <div class="col-sm-7 col-md-7">
-                            <label asp-for="Name">Name</label>
+                            <!--<div asp-validation-for="Name" class="form-group has-error">-->
+                            <label asp-for="Name" runat="server">Name</label>
                             <input type="text" asp-for="Name" class="form-control" />
+                            <!--</div>-->
                         </div>
                         <div class="col-sm-5 col-md-5">
-                            <label asp-for="Rank">Rank</label>
-                            <input type="text" asp-for="Rank" class="form-control text-center" value="1" disabled />
+                            <label asp-for="Rank" runat="server">Rank</label>
+                            <input type="text" asp-for="Rank" class="form-control text-center" value="1" readonly/>
                         </div>
                     </div>
                     <div class="row">
@@ -73,53 +76,59 @@
                             <th class="col-sm-2 col-md-2">Points</th>
                             <th class="col-sm-1 col-md-1">Skill Name</th>
                         </tr>
-                        @foreach (var c in classes) {
-                            <tr id="SSect@(c.ClassTypeID)" name="skills" @(classes.First() == c ? String.Empty : "hidden")>
-                                <td>
-                                    <a class="btn btn-lg col-sm-1 col-md-1 glyphicon glyphicon-minus-sign" id="decSBar@(c.ClassTypeID)" onclick="updateSkill(this.id);" style="padding:0px;"></a>
-                                    <div class="col-sm-9 col-md-9">
-                                        <div class="progress">
-                                            <div class="progress-bar" role="progressbar" id="SBar@(c.ClassTypeID)" aria-valuenow="@(c.Strength)" aria-valuemin="@(c.Strength)" aria-valuemax="100" style="width: @( c.Strength)%;"></div>
-                                        </div>
+                        <tr>
+                            @foreach (var c in classes)
+                            {
+                            <td id="SSect@(c.ClassTypeID)" name="skills" @(classes.First() == c ? String.Empty : "hidden")>
+                                <a class="btn btn-lg col-sm-1 col-md-1 glyphicon glyphicon-minus-sign" id="decStrBar@(c.ClassTypeID)" onclick="updateSkill(this.id);" style="padding:0px;"></a>
+                                <div class="col-sm-9 col-md-9">
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" id="StrBar@(c.ClassTypeID)" aria-valuenow="@(c.Strength)" aria-valuemin="@(c.Strength)" aria-valuemax="100" style="width: @( c.Strength)%;"></div>
                                     </div>
-                                    <a class="btn btn-lg col-sm-1 col-md-1 glyphicon glyphicon-plus-sign" id="incSBar@(c.ClassTypeID)" onclick="updateSkill(this.id);" style="padding:0px;"></a>
-                                </td>
-                                <td>
-                                    <input type="text" asp-for="Strength" id="S@(c.ClassTypeID)" class="form-control text-center" value="@(c.Strength)" disabled />
-                                </td>
-                                <td>Strength</td>
-                            </tr>
-                            <tr id="DSect@(c.ClassTypeID)" name="skills" @(classes.First() == c ? String.Empty : "hidden")>
-                                <td>
-                                    <a class="btn btn-lg col-sm-1 col-md-1 glyphicon glyphicon-minus-sign" id="decDBar@(c.ClassTypeID)" onclick="updateSkill(this.id);" style="padding:0px;"></a>
-                                    <div class="col-sm-9 col-md-9">
-                                        <div class="progress">
-                                            <div class="progress-bar" role="progressbar" id="DBar@(c.ClassTypeID)" aria-valuenow="@(c.Dexterity)" aria-valuemin="@(c.Dexterity)" aria-valuemax="100" style="width: @(c.Dexterity)%;"></div>
-                                        </div>
+                                </div>
+                                <a class="btn btn-lg col-sm-1 col-md-1 glyphicon glyphicon-plus-sign" id="incStrBar@(c.ClassTypeID)" onclick="updateSkill(this.id);" style="padding:0px;"></a>
+                            </td>
+                            }
+                            <td>
+                                <input asp-for="Strength" runat="server" id="Str" class="form-control text-center" value="@(classes.First().Strength)" readonly />
+                            </td>
+                            <td>Strength</td>
+                        </tr>
+                        <tr>
+                            @foreach (var c in classes)
+                            {
+                            <td id="DSect@(c.ClassTypeID)" name="skills" @(classes.First() == c ? String.Empty : "hidden")>
+                                <a class="btn btn-lg col-sm-1 col-md-1 glyphicon glyphicon-minus-sign" id="decDexBar@(c.ClassTypeID)" onclick="updateSkill(this.id);" style="padding:0px;"></a>
+                                <div class="col-sm-9 col-md-9">
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" id="DexBar@(c.ClassTypeID)" aria-valuenow="@(c.Dexterity)" aria-valuemin="@(c.Dexterity)" aria-valuemax="100" style="width: @(c.Dexterity)%;"></div>
                                     </div>
-                                    <a class="btn btn-lg col-sm-1 col-md-1 glyphicon glyphicon-plus-sign" id="incDBar@(c.ClassTypeID)" onclick="updateSkill(this.id);" style="padding:0px;"></a>
-                                </td>
-                                <td>
-                                    <input type="text" asp-for="Dexterity" id="D@(c.ClassTypeID)" class="form-control text-center" value="@(c.Dexterity)" disabled />
-                                </td>
-                                <td>Dexterity</td>
-                            </tr>
-                            <tr id="ISect@(c.ClassTypeID)" name="skills" @(classes.First() == c ? String.Empty : "hidden")>
-                                <td>
-                                    <a class="btn btn-lg col-sm-1 col-md-1 glyphicon glyphicon-minus-sign" id="decIBar@(c.ClassTypeID)" onclick="updateSkill(this.id);" style="padding:0px;"></a>
-                                    <div class="col-sm-9 col-md-9">
-                                        <div class="progress">
-                                            <div class="progress-bar" role="progressbar" id="IBar@(c.ClassTypeID)" aria-valuenow="@(c.Intelligence)" aria-valuemin="@(c.Intelligence)" aria-valuemax="100" style="width: @(c.Intelligence)%;"></div>
-                                        </div>
+                                </div>
+                                <a class="btn btn-lg col-sm-1 col-md-1 glyphicon glyphicon-plus-sign" id="incDexBar@(c.ClassTypeID)" onclick="updateSkill(this.id);" style="padding:0px;"></a>
+                            </td>
+                            }
+                            <td>
+                                <input asp-for="Dexterity" runat="server" id="Dex" class="form-control text-center" value="@(classes.First().Dexterity)" readonly/>
+                            </td>
+                            <td>Dexterity</td>
+                        </tr>
+                        <tr>
+                            @foreach(var c in classes){
+                            <td id="ISect@(c.ClassTypeID)" name="skills" @(classes.First() == c ? String.Empty : "hidden")>
+                                <a class="btn btn-lg col-sm-1 col-md-1 glyphicon glyphicon-minus-sign" id="decIntBar@(c.ClassTypeID)" onclick="updateSkill(this.id);" style="padding:0px;"></a>
+                                <div class="col-sm-9 col-md-9">
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" id="IntBar@(c.ClassTypeID)" aria-valuenow="@(c.Intelligence)" aria-valuemin="@(c.Intelligence)" aria-valuemax="100" style="width: @(c.Intelligence)%;"></div>
                                     </div>
-                                    <a class="btn btn-lg col-sm-1 col-md-1 glyphicon glyphicon-plus-sign" id="incSBar@(c.ClassTypeID)" onclick="updateSkill(this.id);" style="padding:0px;"></a>
-                                </td>
-                                <td>
-                                    <input type="text" asp-for="Intelligence" id="I@(c.ClassTypeID)" class="form-control text-center" value="@(c.Intelligence)" disabled/>
-                                </td>
-                                <td>Intelligence</td>
-                            </tr>
-                        }
+                                </div>
+                                <a class="btn btn-lg col-sm-1 col-md-1 glyphicon glyphicon-plus-sign" id="incIntBar@(c.ClassTypeID)" onclick="updateSkill(this.id);" style="padding:0px;"></a>
+                            </td>
+                            }
+                            <td>
+                                <input asp-for="Intelligence" runat="server" id="Int" class="form-control text-center" value="@(classes.First().Intelligence)" readonly />
+                            </td>
+                            <td>Intelligence</td>
+                        </tr>
                         <tr>
                             <td>
                                 <div class="col-sm-1 col-md-1"></div>
@@ -130,7 +139,7 @@
                                 </div>
                                 <div class="col-sm-1 col-md-1"></div>
                             </td>
-                            <td><input type="text" asp-for="CurrentHealth" class="form-control text-center" value="100" disabled /></td>
+                            <td><input asp-for="CurrentHealth" class="form-control text-center" value="100" readonly /></td>
                             <td>Health</td>
                         </tr>
                     </table>
@@ -156,15 +165,20 @@
             $("#SSect" + currClass).removeAttr("hidden");
             $("#DSect" + currClass).removeAttr("hidden");
             $("#ISect" + currClass).removeAttr("hidden");
+            $("#Str").val($("#StrBar" + currClass).attr('aria-valuemin'));
+            $("#Dex").val($("#DexBar" + currClass).attr('aria-valuemin'));
+            $("#Int").val($("#IntBar" + currClass).attr('aria-valuemin'));
+            $("#classType").val($(".item.active").attr("id"));
         });
     };
 
 
     function updateSkill(id) {
         var operator = id.substring(0, 3); // inc, dec
-        var skill = id.substring(3, 4); // S, D, I
+        var skill = id.substring(3, 6); // Str, Dex, Int
         var classId = id.substring(id.length - 1); // 1, 2, 3, ...
         var progressBar = "#" + id.substring(3);
+        console.log(skill);
 
         if (operator == "inc" && Number($(progressBar).attr('aria-valuenow')) < Number($(progressBar).attr('aria-valuemax'))
             && Number($("#pointBar").attr("aria-valuenow")) > 0
@@ -172,7 +186,7 @@
         {
             $(progressBar).attr('aria-valuenow', Number($(progressBar).attr('aria-valuenow')) + 1);
             $(progressBar).attr("style", "width:" + Number($(progressBar).attr('aria-valuenow')) + "%;");
-            $("#"+skill+classId).val($(progressBar).attr('aria-valuenow'));
+            $("#"+skill).val($(progressBar).attr('aria-valuenow'));
             $("#pointCount").text(Number($("#pointCount").text()) - 1);
         }
         else if (operator == "dec" && Number($(progressBar).attr('aria-valuenow')) > Number($(progressBar).attr('aria-valuemin'))
@@ -181,7 +195,7 @@
         {
             $(progressBar).attr('aria-valuenow', Number($(progressBar).attr('aria-valuenow')) - 1);
             $(progressBar).attr("style", "width:" + Number($(progressBar).attr('aria-valuenow')) + "%;");
-            $("#"+skill+classId).val($(progressBar).attr('aria-valuenow'));
+            $("#"+skill).val($(progressBar).attr('aria-valuenow'));
             $("#pointCount").text(Number($("#pointCount").text()) + 1);
         }
 
