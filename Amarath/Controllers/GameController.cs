@@ -10,11 +10,19 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
+enum Choices
+{
+    PROCEED = 0,
+    FIGHT = 1,
+    RUN = 2
+}
 class Choice
 {
     public string name { get; set; }
     public Action method { get; set; }
 }
+
+//TODO: Make the Choices list better
 
 namespace Amarath.Controllers
 {
@@ -53,7 +61,7 @@ namespace Amarath.Controllers
                 listDialog = new List<KeyValuePair<string, string>>();
                 listAction = new List<KeyValuePair<string, string>>();
                 listDialog.Add(new KeyValuePair<string, string>(location.Description, txtNormal));
-                listAction.Add(new KeyValuePair<string, string>("You entered " + location.Name + "(Dungeon Level " + location.DungeonLevel + ")", txtNormal));
+                listAction.Add(new KeyValuePair<string, string>("You entered " + location.Name + " (Dungeon Level " + location.DungeonLevel + ")", txtNormal));
                 HttpContext.Session.SetString("Dialog", JsonConvert.SerializeObject(listDialog));
                 HttpContext.Session.SetString("Action", JsonConvert.SerializeObject(listAction));
                 HttpContext.Session.SetString("DungeonLevel", location.DungeonLevel.ToString());
@@ -101,15 +109,18 @@ namespace Amarath.Controllers
             int randNum = rand.Next(1, 2);
             var listDialog = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(HttpContext.Session.GetString("Dialog"));
             //List<KeyValuePair<string, Action>> listChoices = new List<KeyValuePair<string, Action>>();
-
+            List<string> listChoices = new List<string>();
             //If character playing for the first time
             if (Convert.ToInt32(HttpContext.Session.GetString("DungeonLevel"))  == 0)
             {
                 //listChoices.Add(new KeyValuePair<string, Action>("proceed", Proceed));
-                listDialog.Add(new KeyValuePair<string, string>("proceed", txtOptions));
+                listChoices.Add("proceed");
+                listDialog.Add(new KeyValuePair<string, string>(" - Proceed", txtOptions));
             }
             else if(randNum == 1)
             {
+                listChoices.Add("leave");
+                listChoices.Add("explore");
                 listDialog.Add(new KeyValuePair<string, string>("You enter and look around.", txtNormal));
                 listDialog.Add(new KeyValuePair<string, string>(" - Leave", txtOptions));
                 listDialog.Add(new KeyValuePair<string, string>(" - Explore", txtOptions));
@@ -119,7 +130,7 @@ namespace Amarath.Controllers
             }
             //CANT SERIALIZE REFERENCES AKA DELEGATES!!
             HttpContext.Session.SetString("Dialog", JsonConvert.SerializeObject(listDialog));
-            //HttpContext.Session.SetString("Choices", JsonConvert.SerializeObject(listChoices));
+            HttpContext.Session.SetString("Choices", JsonConvert.SerializeObject(listChoices));
         }
 
         public ViewResult StartBattle()
@@ -139,35 +150,114 @@ namespace Amarath.Controllers
         {
             // Write player's response to dialog
             var listDialog = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(HttpContext.Session.GetString("Dialog"));
-            var listChoices = JsonConvert.DeserializeObject<List<KeyValuePair<string, Action>>>(HttpContext.Session.GetString("Choices"));
+            var listChoices = JsonConvert.DeserializeObject<List<string>>(HttpContext.Session.GetString("Choices"));
 
+            Action action = null;
             // Execute appropriate action (if any)
-            var found = false;
-            foreach(KeyValuePair<string, Action> item in listChoices)
+            if(listChoices.Contains(viewModel.UserInput.ToLower()))
             {
-                if(item.Key.ToLower() == viewModel.UserInput.ToLower())
+                listDialog.Add(new KeyValuePair<string, string>(viewModel.UserInput, txtPlayer));
+                switch (viewModel.UserInput.ToLower())
                 {
-                    found = true;
-                    item.Value();
-                    listDialog.Add(new KeyValuePair<string, string>(viewModel.UserInput, txtPlayer));
+                    case "proceed":
+                        listDialog.Add(new KeyValuePair<string, string>(viewModel.UserInput, txtDanger));
+                        action = AscendLevel;
+                        break;
+                    case "leave":
+                        action = DescendLevel;
+                        break;
+                    default:
+                        listDialog.Add(new KeyValuePair<string, string>(viewModel.UserInput + " has not been implemented yet.", txtDanger));
+                        break;
                 }
+                
             }
-            if(!found)
+            else
             {
                 listDialog.Add(new KeyValuePair<string, string>(viewModel.UserInput + " is not a valid choice!", txtDanger));
+                
             }
-
             HttpContext.Session.SetString("Dialog", JsonConvert.SerializeObject(listDialog));
+            //Call the action down here because the Dialog needs to be set so it doesn't get overwritten.
+            if (action != null)
+            {
+                action();
+            }
+            /*
+             * var found = false;
+        foreach(KeyValuePair<string, Action> item in listChoices)
+        {
+            if(item.Key.ToLower() == viewModel.UserInput.ToLower())
+            {
+                found = true;
+                item.Value();
+                listDialog.Add(new KeyValuePair<string, string>(viewModel.UserInput, txtPlayer));
+            }
+        }
+        if(!found)
+        {
+            listDialog.Add(new KeyValuePair<string, string>(viewModel.UserInput + " is not a valid choice!", txtDanger));
+        }
+        */
+
             return View("Play", viewModel);
         }
 
-        public void Proceed()
+        public async void AscendLevel()
         {
             var listDialog = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(HttpContext.Session.GetString("Dialog"));
+            var listAction = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(HttpContext.Session.GetString("Action"));
 
-            listDialog.Add(new KeyValuePair<string, string>("In Proceed", txtDanger));
+            //Increment dungeon level
+            var optionsBuilder = new DbContextOptionsBuilder<AmarathContext>();
+            var db = new AmarathContext(optionsBuilder.Options);
+            var cUser = await userManager.GetUserAsync(User);
+            var cChar = db.Characters.First(x => x.UserId == cUser.Id);
+            cChar.DungeonLevel += 1;
+            var location = db.Locations.First(x => x.DungeonLevel == cChar.DungeonLevel);
+            db.SaveChanges();
 
+            
+
+
+            if(location.DungeonLevel == 1)
+            {
+                listDialog.Add(new KeyValuePair<string, string>("You wander up the stairs and open the door...", txtNormal));
+            }
+            listDialog.Add(new KeyValuePair<string, string>(location.Description, txtNormal));
+            listAction.Add(new KeyValuePair<string, string>("You entered " + location.Name + " (Dungeon Level " + location.DungeonLevel + ")", txtNormal));
+
+            //Save all the text
+            HttpContext.Session.SetString("DungeonLevel", location.DungeonLevel.ToString());
             HttpContext.Session.SetString("Dialog", JsonConvert.SerializeObject(listDialog));
+            HttpContext.Session.SetString("Action", JsonConvert.SerializeObject(listAction));
+
+            GenerateOptions();
+        }
+        public async void DescendLevel()
+        {
+            //Increment dungeon level
+            var optionsBuilder = new DbContextOptionsBuilder<AmarathContext>();
+            var db = new AmarathContext(optionsBuilder.Options);
+            var cUser = await userManager.GetUserAsync(User);
+            var cChar = db.Characters.First(x => x.UserId == cUser.Id);
+            cChar.DungeonLevel -= 1;
+            var location = db.Locations.First(x => x.DungeonLevel == cChar.DungeonLevel);
+            db.SaveChanges();
+
+            var listDialog = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(HttpContext.Session.GetString("Dialog"));
+            var listAction = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(HttpContext.Session.GetString("Action"));
+
+
+            listDialog.Add(new KeyValuePair<string, string>(location.Description, txtNormal));
+            listAction.Add(new KeyValuePair<string, string>("You entered " + location.Name + " (Dungeon Level " + location.DungeonLevel + ")", txtNormal));
+
+            //Save all the text
+            HttpContext.Session.SetString("DungeonLevel", location.DungeonLevel.ToString());
+            HttpContext.Session.SetString("Dialog", JsonConvert.SerializeObject(listDialog));
+            HttpContext.Session.SetString("Action", JsonConvert.SerializeObject(listAction));
+
+            GenerateOptions();
         }
     }
 }
