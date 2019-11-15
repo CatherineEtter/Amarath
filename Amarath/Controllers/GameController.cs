@@ -86,19 +86,22 @@ namespace Amarath.Controllers
             }
             else if(randNum == 1)
             {
-                listChoices.Add("leave");
                 listChoices.Add("explore");
+                listChoices.Add("proceed");
+                listChoices.Add("leave");
+
                 listDialog.Add(new KeyValuePair<string, string>("You enter and look around.", txtNormal));
-                listDialog.Add(new KeyValuePair<string, string>(" - Leave", txtOptions));
                 listDialog.Add(new KeyValuePair<string, string>(" - Explore", txtOptions));
+                listDialog.Add(new KeyValuePair<string, string>(" - Proceed", txtOptions));
+                listDialog.Add(new KeyValuePair<string, string>(" - Leave", txtOptions));
             }
-            else
+            HttpContext.Session.SetString("Dialog", JsonConvert.SerializeObject(listDialog));
+            HttpContext.Session.SetString("Choices", JsonConvert.SerializeObject(listChoices));
+
+            if (randNum == 0)
             {
                 SpawnEnemies();
             }
-
-            HttpContext.Session.SetString("Dialog", JsonConvert.SerializeObject(listDialog));
-            HttpContext.Session.SetString("Choices", JsonConvert.SerializeObject(listChoices));
         }
 
         public ViewResult SpawnEnemies()
@@ -157,6 +160,7 @@ namespace Amarath.Controllers
                 Task.Run(async () => { await task(); }).Wait();
             }
 
+            viewModel.UserInput = ""; //Reset user input
             return View("Play", viewModel);
         }
 
