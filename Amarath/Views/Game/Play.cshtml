@@ -3,6 +3,9 @@
 @using Microsoft.EntityFrameworkCore;
 @using Microsoft.AspNetCore.Http;
 @using Newtonsoft.Json;
+
+@model Amarath.DAL.Models.PlayViewModel;
+
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 
 
@@ -67,19 +70,30 @@
     <div class="game-footer">
         <div class="row max-width">
             <div class="col-md-6">
-                <button class="btn btn-default" onclick="PlayerCommand()">Enter</button>
+
                 <!--
-                @using (Html.BeginForm("PlayerCommand", "Game"))
+    <form class="center-block" runat="server" method="post" asp-controller="HomeController" asp-action="PlayerCommand">
+        <div>
+            <input asp-for="UserInput" class="body-font" type="text" />
+            <input type="submit" value="Enter" />
+        </div>
+    </form>
+    -->
+
+                @using (Html.BeginForm("PlayerCommand", "Game", FormMethod.Post))
                 {
-                    <input class="body-font" type="text" />
-                    <input type="submit" value="Enter" />
+                    <input asp-for="UserInput"/>
+                    <button type="submit">Enter</button>
+                    <!---
+        <input class="body-font" type="text" />
+        <input type="submit" value="Enter" />
+        -->
                 }
-                <button class="btn btn-default" onclick="PlayerCommand()">Test</button>
-                    -->
                 <!---
-                <input" class="body-font" type="text" value="test" />
-                <button class="btn btn-default" onclick="StartGame()">Enter</button>
-                -->
+                    <button class="btn btn-default" onclick="PlayerCommand()">Enter</button>
+    <input" class="body-font" type="text" value="test" />
+    <button class="btn btn-default" onclick="StartGame()">Enter</button>
+    -->
                 <a asp-area="" asp-controller="Game" asp-action="LevelUp">Level Up</a>
             </div>
             <div class="col-md-3">

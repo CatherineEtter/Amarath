@@ -10,6 +10,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
+class Choice
+{
+    public string name { get; set; }
+    public Action method { get; set; }
+}
+
 namespace Amarath.Controllers
 {
     public class GameController : Controller
@@ -57,6 +63,19 @@ namespace Amarath.Controllers
             return View();
         }
 
+/*        public IActionResult Play(PlayViewModel viewModel)
+        {
+            if(ModelState.IsValid)
+            {
+                var listDialog = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(HttpContext.Session.GetString("Dialog"));
+
+                listDialog.Add(new KeyValuePair<string, string>("In Play method", txtDanger));
+
+                HttpContext.Session.SetString("Dialog", JsonConvert.SerializeObject(listDialog));
+            }
+            return View();
+        }*/
+
         public async Task<ActionResult> LevelUp()
         {
             //Increment player level
@@ -81,10 +100,13 @@ namespace Amarath.Controllers
             var rand = new Random();
             int randNum = rand.Next(1, 2);
             var listDialog = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(HttpContext.Session.GetString("Dialog"));
+            //List<KeyValuePair<string, Action>> listChoices = new List<KeyValuePair<string, Action>>();
 
+            //If character playing for the first time
             if (Convert.ToInt32(HttpContext.Session.GetString("DungeonLevel"))  == 0)
             {
-                listDialog.Add(new KeyValuePair<string, string>(" - Proceed", txtOptions));
+                //listChoices.Add(new KeyValuePair<string, Action>("proceed", Proceed));
+                listDialog.Add(new KeyValuePair<string, string>("proceed", txtOptions));
             }
             else if(randNum == 1)
             {
@@ -95,7 +117,9 @@ namespace Amarath.Controllers
             {
                 StartBattle();
             }
+            //CANT SERIALIZE REFERENCES AKA DELEGATES!!
             HttpContext.Session.SetString("Dialog", JsonConvert.SerializeObject(listDialog));
+            //HttpContext.Session.SetString("Choices", JsonConvert.SerializeObject(listChoices));
         }
 
         public ViewResult StartBattle()
@@ -110,11 +134,40 @@ namespace Amarath.Controllers
 
             return View();
         }
-
-        public ViewResult PlayerCommand()
+        [HttpPost]
+        public ActionResult PlayerCommand(PlayViewModel viewModel)
         {
+            // Write player's response to dialog
+            var listDialog = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(HttpContext.Session.GetString("Dialog"));
+            var listChoices = JsonConvert.DeserializeObject<List<KeyValuePair<string, Action>>>(HttpContext.Session.GetString("Choices"));
 
-            return View();
+            // Execute appropriate action (if any)
+            var found = false;
+            foreach(KeyValuePair<string, Action> item in listChoices)
+            {
+                if(item.Key.ToLower() == viewModel.UserInput.ToLower())
+                {
+                    found = true;
+                    item.Value();
+                    listDialog.Add(new KeyValuePair<string, string>(viewModel.UserInput, txtPlayer));
+                }
+            }
+            if(!found)
+            {
+                listDialog.Add(new KeyValuePair<string, string>(viewModel.UserInput + " is not a valid choice!", txtDanger));
+            }
+
+            HttpContext.Session.SetString("Dialog", JsonConvert.SerializeObject(listDialog));
+            return View("Play", viewModel);
+        }
+
+        public void Proceed()
+        {
+            var listDialog = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(HttpContext.Session.GetString("Dialog"));
+
+            listDialog.Add(new KeyValuePair<string, string>("In Proceed", txtDanger));
+
+            HttpContext.Session.SetString("Dialog", JsonConvert.SerializeObject(listDialog));
         }
     }
 }
