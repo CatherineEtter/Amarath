@@ -160,7 +160,6 @@ namespace Amarath.Controllers
                 switch (viewModel.UserInput.ToLower())
                 {
                     case "proceed":
-                        listDialog.Add(new KeyValuePair<string, string>(viewModel.UserInput, txtDanger));
                         action = AscendLevel;
                         break;
                     case "leave":
@@ -183,22 +182,6 @@ namespace Amarath.Controllers
             {
                 action();
             }
-            /*
-             * var found = false;
-        foreach(KeyValuePair<string, Action> item in listChoices)
-        {
-            if(item.Key.ToLower() == viewModel.UserInput.ToLower())
-            {
-                found = true;
-                item.Value();
-                listDialog.Add(new KeyValuePair<string, string>(viewModel.UserInput, txtPlayer));
-            }
-        }
-        if(!found)
-        {
-            listDialog.Add(new KeyValuePair<string, string>(viewModel.UserInput + " is not a valid choice!", txtDanger));
-        }
-        */
 
             return View("Play", viewModel);
         }
@@ -228,7 +211,7 @@ namespace Amarath.Controllers
             listAction.Add(new KeyValuePair<string, string>("You entered " + location.Name + " (Dungeon Level " + location.DungeonLevel + ")", txtNormal));
 
             //Save all the text
-            HttpContext.Session.SetString("DungeonLevel", location.DungeonLevel.ToString());
+            //HttpContext.Session.SetString("DungeonLevel", location.DungeonLevel.ToString());
             HttpContext.Session.SetString("Dialog", JsonConvert.SerializeObject(listDialog));
             HttpContext.Session.SetString("Action", JsonConvert.SerializeObject(listAction));
 
