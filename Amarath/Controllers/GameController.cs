@@ -108,7 +108,8 @@ namespace Amarath.Controllers
             AddToChoices("attack");
             AddToChoices("run");
 
-            AddToAction("A " + cEnemy.Name + " ( Level " + cEnemy.Rank + ") appears!", txtDanger);
+            AddToAction("A " + cEnemy.Name + " appears!", txtDanger);
+            AddToAction("Lvl: " + cEnemy.Rank + "| HP: " + cEnemy.Health + "| Min Dmg: " + cEnemy.MinDamage + "| Max Dmg: " + cEnemy.MaxDamage, txtDanger);
             AddToDialog(" - Attack", txtOptions);
             AddToDialog(" - Run", txtOptions);
 
