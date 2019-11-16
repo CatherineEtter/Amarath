@@ -1,4 +1,8 @@
-﻿@using Amarath.DAL.Models;
+﻿@using Amarath.DAL.Data;
+@using Amarath.DAL.Models;
+@model Amarath.DAL.Models.CharacterViewModel;
+@using Microsoft.EntityFrameworkCore;
+
 @inject UserManager<IdentityUserExt> userManager;
 @{
     ViewData["Title"] = "Profile";
@@ -6,29 +10,33 @@
 }
 @{
     var currentUser = await userManager.GetUserAsync(User);
+
+    var optionsBuilder = new DbContextOptionsBuilder<AmarathContext>();
+    var db = new AmarathContext(optionsBuilder.Options);
+    var characters = db.Characters.Where(x => x.UserId == currentUser.Id);
 }
 <div class="container margin-container">
+    <div class="page-header row">
+        <h2>Welcome, @User.Identity.Name</h2>
+    </div>
     <div class="row">
-        <div class="col-md-6 page-header">
-            <h2>Welcome, @User.Identity.Name</h2>
-        </div>
-        <div class="col-md-3">
+        <div class="col-md-9 col-sm-9"><h3>Your Account Information</h3></div>
+        <div class="col-md-1">
             <form method="post" asp-action="Logout" asp-controller="Account">
                 <button type="submit" class="btn navbar-btn ">
                     Logout
                 </button>
             </form>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2 pull-right">
             <form method="post" asp-action="CreateCharacter" asp-controller="Character">
-                <button type="submit" class="btn navbar-btn ">
+                <button type="submit" class="btn navbar-btn" @(characters.Count() > 0 ? "disabled" : String.Empty)>
                     Create Character
                 </button>
             </form>
         </div>
     </div>
     <div>
-        <h3>Your Account Information</h3>
         <div>
             <ul class="list-group">
                 <li class="list-group-item">

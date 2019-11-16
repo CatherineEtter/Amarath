@@ -43,12 +43,12 @@ namespace Amarath.Controllers
                     UserId = cUser.Id,
                     ClassTypeId = viewModel.ClassTypeId,
                     Name = viewModel.Name,
-                    Rank = viewModel.Rank,
+                    Rank = 1,
                     Strength = viewModel.Strength,
                     Intelligence = viewModel.Intelligence,
                     Dexterity = viewModel.Dexterity,
-                    CurrentHealth = viewModel.CurrentHealth,
-                    MaxHealth = viewModel.CurrentHealth,
+                    CurrentHealth = 100,
+                    MaxHealth = 100,
                     Experience = 0,
                     DungeonLevel = 0
                 };
