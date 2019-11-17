@@ -1,0 +1,42 @@
+﻿@model IEnumerable<Amarath.Models.Item>
+@{
+    ViewData["Title"] = "Codex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    body {
+        background-color: #f0f0f0;
+        background: url(/images/wall_background.png) no-repeat center center fixed;
+        background-size: cover;
+    }
+</style>
+
+<div class="container margin-container">
+    <div class="row text-center full-height">
+        <div class="col-sm-6 col-sm-offset-3">
+            <h2>Codex</h2>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>
+                            <a asp-action="Codex" asp-route-sortOrder="@ViewData["ItemData"]">@Html.DisplayNameFor(model => model.Name)</a>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
