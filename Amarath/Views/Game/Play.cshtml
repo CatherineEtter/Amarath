@@ -43,7 +43,7 @@
     <div class="game-header">
         <div class="row max-width">
             <div class="col-md-3">@cChar.Name</div>
-            <div class="col-md-6">Health</div>
+            <div class="col-md-6">Health: @cChar.CurrentHealth / @cChar.MaxHealth</div>
             <div class="col-md-3">Level @cChar.Rank</div>
         </div>
     </div>
@@ -180,6 +180,7 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Apply</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
             </div>
         </div>

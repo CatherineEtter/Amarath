@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using Amarath.Models;
 
 namespace Amarath.Controllers
 {
@@ -19,8 +20,10 @@ namespace Amarath.Controllers
         // For coloring messages
         private string txtNormal = "#FFFFFF";
         private string txtDanger = "#FF0000";
-        private string txtPlayer = "#FFFF00";
+        private string txtPlayer = "#00FFFF";
         private string txtOptions = "#66ffcc";
+        private string txtSuccess = "#00FF00";
+        private string txtInfo = "#FFFF00";
 
         private static DbContextOptionsBuilder<AmarathContext> optionsBuilder = new DbContextOptionsBuilder<AmarathContext>();
         private static readonly AmarathContext db = new AmarathContext(optionsBuilder.Options);
@@ -109,7 +112,7 @@ namespace Amarath.Controllers
             AddToChoices("run");
 
             AddToAction("A " + cEnemy.Name + " appears!", txtDanger);
-            AddToAction("Lvl: " + cEnemy.Rank + "| HP: " + cEnemy.Health + "| Min Dmg: " + cEnemy.MinDamage + "| Max Dmg: " + cEnemy.MaxDamage, txtDanger);
+            AddToAction("Lvl: " + cEnemy.Rank + "| HP: " + cEnemy.Health + "| Min Dmg: " + cEnemy.MinDamage + "| Max Dmg: " + cEnemy.MaxDamage, txtInfo);
             AddToDialog(" - Attack", txtOptions);
             AddToDialog(" - Run", txtOptions);
 
@@ -232,10 +235,71 @@ namespace Amarath.Controllers
              * Use LinQ to get items
              */
         }
+        //TODO: Enemy get's regenerated, but change this later when there is time.
         public async Task StartBattle()
         {
             var cUser = await userManager.GetUserAsync(User);
             var cChar = db.Characters.First(x => x.UserId == cUser.Id);
+            int dlevel = Int32.Parse(HttpContext.Session.GetString("DungeonLevel"));
+            var cEnemy = db.Enemies.First(x => x.Rank == dlevel);
+            Random rand = new Random();
+
+            Enemy enemy = cEnemy;
+            while (enemy.Health > 0 && cChar.CurrentHealth > 0)
+            {
+                AddToAction(enemy.Name + "'s HP: " + enemy.Health, txtInfo);
+                if (cChar.CurrentHealth > 0)
+                {
+                    var chance = rand.Next(1, 100);
+                    AddToAction("You go in for an attack...", txtNormal);
+                    if (chance < 10)
+                    {
+                        enemy.Health -= 25;
+                        AddToAction("Critical! You did 25 hp of damage!", txtInfo);
+                    }
+                    else if (chance < 70)
+                    {
+                        enemy.Health -= 10;
+                        AddToAction(" You did 10 hp of damage!", txtInfo);
+                    }
+                    else
+                    {
+                        AddToAction(enemy.Name + " dodged the attack!", txtInfo);
+                    }
+                }
+
+                if(enemy.Health > 0)
+                {
+                    var chance = rand.Next(1, 100);
+                    AddToAction(enemy.Name + " goes in for an attack...", txtNormal);
+                    if (chance < 10)
+                    {
+                        cChar.CurrentHealth -= 10;
+                        AddToAction("Critical! " + enemy.Name + " did 10 hp of damage!", txtInfo);
+                    }
+                    else if (chance < 70)
+                    {
+                        cChar.CurrentHealth -= 5;
+                        AddToAction(enemy.Name + " did 5 hp of damage!", txtInfo);
+                    }
+                    else
+                    {
+                        AddToAction("You dodged the attack!", txtInfo);
+                    }
+                }
+            }
+
+            if(enemy.Health <= 0)
+            {
+                AddToAction("You successfully killed " + enemy.Name, txtSuccess);
+                ClearChoices();
+                AddToChoices("loot");
+                AddToChoices("proceed");
+            }
+            else if(cChar.CurrentHealth <= 0)
+            {
+                AddToAction("You were killed by " + enemy.Name, txtDanger);
+            }
         }
         public async Task EquipItem(int itemId)
         {
