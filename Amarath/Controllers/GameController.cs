@@ -74,7 +74,7 @@ namespace Amarath.Controllers
         public void GenerateOptions()
         {
             Random rand = new Random();
-            int randNum = rand.Next(0, 2); //50% chance to spawn a monster
+            int randNum = rand.Next(0, 2); //50% chance to spawn a monster TODO: Change later
 
             ClearChoices();
             //Don't spawn anything in level 0
@@ -120,8 +120,9 @@ namespace Amarath.Controllers
         {
             //TODO: Make the Choices list better
             var listChoices = JsonConvert.DeserializeObject<List<string>>(HttpContext.Session.GetString("Choices"));
-            
             Func<Task> task = null;
+            Random rand = new Random();
+            int randNum = 0;
             // Execute appropriate action (if any)
             if (listChoices.Contains(viewModel.UserInput.ToLower()))
             {
@@ -135,7 +136,22 @@ namespace Amarath.Controllers
                         task = DescendLevel;
                         break;
                     case "explore":
-                        task = ExploreLevel;
+                        randNum = rand.Next(1, 4);
+                        switch(randNum)
+                        {
+                            case 1:
+                                AddToDialog("You decide to investigate the area...", txtNormal);
+                                break;
+                            case 2:
+                                AddToDialog("You search the room..", txtNormal);
+                                break;
+                            case 3:
+                                AddToDialog("You look around your surroundings...", txtNormal);
+                                break;
+                            default:
+                                break;
+                        }
+                        task = GetItems;
                         break;
                     case "run":
                         AddToAction("You flee the fight!", txtNormal);
@@ -143,6 +159,10 @@ namespace Amarath.Controllers
                         break;
                     case "attack":
                         task = StartBattle;
+                        break;
+                    case "loot":
+                        AddToDialog("You loot the corpse", txtNormal);
+                        task = GetItems;
                         break;
                     default:
                         break;
@@ -205,15 +225,21 @@ namespace Amarath.Controllers
                 GenerateOptions();
             }
         }
-        public async Task ExploreLevel()
+
+        public async Task GetItems()
         {
-            var cUser = await userManager.GetUserAsync(User);
-            var cChar = db.Characters.First(x => x.UserId == cUser.Id);
+            /*
+             * Use LinQ to get items
+             */
         }
         public async Task StartBattle()
         {
             var cUser = await userManager.GetUserAsync(User);
             var cChar = db.Characters.First(x => x.UserId == cUser.Id);
+        }
+        public async Task EquipItem(int itemId)
+        {
+            AddToAction("You equiped an item!", txtNormal);
         }
         // =================== Methods to handle HTTP Session =================== //
         public void AddToDialog(string str, string txt)

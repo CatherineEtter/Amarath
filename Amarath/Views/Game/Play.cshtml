@@ -121,6 +121,14 @@
                         <div class="col-md-3">@cChar.MaxHealth</div>
                         <div class="col-md-3">Total</div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-9">Total Defense</div>
+                        <div class="col-md-3">@cChar.TotalDefense</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-9">Total Attack</div>
+                        <div class="col-md-3">@cChar.TotalAttack</div>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -139,7 +147,7 @@
             </div>
             <div class="modal-body">
                 <div class="row main-font-sm">
-                    <div class="col-md-5">Name</div>
+                    <div class="col-md-4">Name</div>
                     <div class="col-md-1">Quantity</div>
                     <div class="col-md-1">Type</div>
                     <div class="col-md-1">Strength</div>
@@ -147,21 +155,23 @@
                     <div class="col-md-1">Intelligence</div>
                     <div class="col-md-1">Damage</div>
                     <div class="col-md-1">Defense</div>
+                    <div class="col-md-1">Equip</div>
                 </div>
                 <div class="body-font">
                     @foreach (var item in cInventory)
                     {
                         var detail = db.Items.First(x => x.ItemID == item.ItemID);
-                        <div class="row">
-                            <div class="col-md-5">@detail.Name</div>
-                            <div class="col-md-1">@item.Quantity</div>
-                            <div class="col-md-1">@detail.Type</div>
-                            <div class="col-md-1">@detail.Strength</div>
-                            <div class="col-md-1">@detail.Dexterity</div>
-                            <div class="col-md-1">@detail.Intelligence</div>
-                            <div class="col-md-1">@detail.Damage</div>
-                            <div class="col-md-1">@detail.Defense</div>
-                        </div>
+                    <div class="row">
+                        <div class="col-md-4">@detail.Name</div>
+                        <div class="col-md-1">@item.Quantity</div>
+                        <div class="col-md-1">@detail.Type</div>
+                        <div class="col-md-1">@detail.Strength</div>
+                        <div class="col-md-1">@detail.Dexterity</div>
+                        <div class="col-md-1">@detail.Intelligence</div>
+                        <div class="col-md-1">@detail.Damage</div>
+                        <div class="col-md-1">@detail.Defense</div>
+                        <div class="col-md-1"><input type="checkbox" checked="@item.Equiped"/></div>
+                    </div>
                         <div class="item-detail body-font-sm">
                             <div><em>@detail.Description</em></div>
                         </div>
