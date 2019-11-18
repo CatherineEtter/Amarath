@@ -14,17 +14,20 @@
         background-size: cover;
     }
 </style>
-<div class="container text-center full-height">
-    <div class="col-sm-6 col-sm-offset-3">
-        @if (signInManager.IsSignedIn(User))
-        {
-            <form method="post" asp-action="Play" asp-controller="Game">
-                <button type="submit" class="btn btn-block"> Play Game </button>
-            </form>
-        }
-        else
-        {
-            <h3>Please <a asp-area="" asp-controller="Account" asp-action="Register">Register</a> or <a asp-area="" asp-controller="Account" asp-action="Login">Login</a> to play</h3>
-        }
+<div class="container margin-container">
+    <div class="text-center full-height center-children">
+        <div class="login-register-container">
+            <img src="~/images/headers/title_txt.png" alt="Delve into the Dark"/>
+            @if (signInManager.IsSignedIn(User))
+            {
+                <form method="post" asp-action="Play" asp-controller="Game">
+                    <button type="submit" class="btn btn-block"> Play Game </button>
+                </form>
+            }
+            else
+            {
+                <h3>Please <a asp-area="" asp-controller="Account" asp-action="Register">Register</a> or <a asp-area="" asp-controller="Account" asp-action="Login">Login</a> to play</h3>
+            }
+        </div>
     </div>
 </div>
