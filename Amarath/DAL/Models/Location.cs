@@ -15,5 +15,7 @@ namespace Amarath.Models
         public string Name { get; set; }
         public string Description { get; set;}
         public int DungeonLevel { get; set; }
+        public string IntroText { get; set; }
+        public string OutroText { get; set; }
     }
 }

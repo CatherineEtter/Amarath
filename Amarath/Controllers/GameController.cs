@@ -357,6 +357,14 @@ namespace Amarath.Controllers
                 AddToAction(hp + " hp restored", txtSuccess);
                 cChar.CurrentHealth += hp;
             }
+            if(invId.Quantity <= 1)
+            {
+                db.Inventories.Remove(invId);
+            }
+            else
+            {
+                invId.Quantity -= 1;
+            }
             db.SaveChanges();
             return View("Play");
         }
