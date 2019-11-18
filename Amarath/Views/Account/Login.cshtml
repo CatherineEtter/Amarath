@@ -11,9 +11,9 @@
     }
 </style>
 <div class="container margin-container">
-    <div class="row text-center full-height">
-        <div class="col-sm-6 col-sm-offset-3">
-            <div class="login-container login-register-container col-md-12">
+    <div class="row text-center full-height center-children">
+        <div class="col-md-6">
+            <div class="login-container login-register-container">
                 <form id="login-form" class="center-block" runat="server" method="post">
                     <div asp-validation-summary="All" class="text-danger"></div>
                     <h2>Login</h2>
@@ -42,9 +42,9 @@
                     </div>
 
                 </form>
-            </div>
-            <div>
-                <p>Please <a asp-area="" asp-controller="Account" asp-action="Register">Register</a> or login to play</p>
+                <div>
+                    <p>Please <a asp-area="" asp-controller="Account" asp-action="Register">Register</a> or login to play</p>
+                </div>
             </div>
         </div>
     </div>
