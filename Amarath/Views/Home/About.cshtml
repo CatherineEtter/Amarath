@@ -1,42 +1,43 @@
 ﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
-    
-    <style>
+<style>
+    h1 {
+        color: white;
+    }
 
+    h1 {
+        font-size: 64px;
+    }
 
-        html,body{
-            background-color:#3a3a3a
-        }
-        h1 {
-            color: white;
-        }
+    p {
+        color: #3a3a3a;
+    }
 
-        h1 {
-            font-size: 64px;
-        }
-
-        p {
-            color: white;
-        }
-
-        p1 {
-            color: white;
-        }
-
-        p1 {
-            font-size: 24px;
-        }
-    </style>
-    <h1>About</h1>
-    <p1> Introduction</p1>
-    <p>Delve into the Dark is a text-based game loosely based on the famous role-playing game, Dungeons and Dragons. Delve into the Dark is a web-application developed with C# in the ASP.NET Core Framework. The SQL Server is a Microsoft Azure server hosted on the cloud to maintain concurrency. Many aspects of the game will be held in a SQL database. The player will have the freedom to make their own character and make decisions that affect the outcome of the game. The application will also support logging in and save files. The player will go through a series of options presented to them. They will either go through combat and investigations until the end of the story. Things that will be held in the database will be items, stats, and player progression. </p>
-    <p1> Tools</p1>
-    <p>
-        The languages and frameworks used in this project is C# for the back-end, JavaScript, HTML, and CSS for the front end, Bootstrap for the library, and ASP.NET for the framework. The setup of the site is MVC, which we selected because of how much easier and organized it is to work with. The database connection is made with .NET Entity Framework.
-        Delve into the Dark’s database is hosted by Microsoft Azure. To store the user’s information and manage their game data, we will be utilizing a database hosted by Microsoft Azure and can be connected to using either Microsoft SQL Server Management Studio or by the web app itself. We have decided to go with a database hosted on the cloud to support concurrency between ourselves as we populate/change the tables and also because we are considering implementing an area where players could exchange/sell their items to other players.
-        For our version control, we are using GitHub. For security and safety, our master branch is protected and all merge requests must be approved by at least one other  group member. We manage project tracking via the “projects” tab in GitHub.
-        The project itself is being developed through Visual Studio 2019 on the Windows OS. We are all using the same development platform because the project was created as a Visual Studio project.
-    </p>
+    body {
+        background-color: #f0f0f0;
+        background: url(/images/wall_background.png) no-repeat center center fixed;
+        background-size: cover;
+    }
+</style>
+<div class="container margin-container">
+    <div class="row text-center full-height">
+        <div class="login-register-container">
+            <img src="~/images/headers/about_txt.png" alt="About" />
+            <h3> Introduction</h3>
+            <p class="text-left">Delve into the Dark is a text-based game loosely based on the famous role-playing game, Dungeons and Dragons. Delve into the Dark is a web-application developed with C# in the ASP.NET Core Framework. The SQL Server is a Microsoft Azure server hosted on the cloud to maintain concurrency. Many aspects of the game will be held in a SQL database. The player will have the freedom to make their own character and make decisions that affect the outcome of the game. The application will also support logging in and save files. The player will go through a series of options presented to them. They will either go through combat and investigations until the end of the story. Things that will be held in the database will be items, stats, and player progression. </p>
+            <h3> Tools</h3>
+            <p class="text-left">
+                The languages and frameworks used in this project is C# for the back-end, JavaScript, HTML, and CSS for the front end, Bootstrap for the library, and ASP.NET for the framework. The setup of the site is MVC, which we selected because of how much easier and organized it is to work with. The database connection is made with .NET Entity Framework.
+                Delve into the Dark’s database is hosted by Microsoft Azure. To store the user’s information and manage their game data, we will be utilizing a database hosted by Microsoft Azure and can be connected to using either Microsoft SQL Server Management Studio or by the web app itself. We have decided to go with a database hosted on the cloud to support concurrency between ourselves as we populate/change the tables and also because we are considering implementing an area where players could exchange/sell their items to other players.
+                For our version control, we are using GitHub. For security and safety, our master branch is protected and all merge requests must be approved by at least one other  group member. We manage project tracking via the “projects” tab in GitHub.
+                The project itself is being developed through Visual Studio 2019 on the Windows OS. We are all using the same development platform because the project was created as a Visual Studio project.
+            </p>
+        </div>
+    </div>
+</div>
 
 
 

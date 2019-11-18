@@ -1,0 +1,78 @@
+﻿@model IEnumerable<Amarath.Models.Item>
+@{
+    ViewData["Title"] = "Codex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    body {
+        background-color: #f0f0f0;
+        background: url(/images/wall_background.png) no-repeat center center fixed;
+        background-size: cover;
+    }
+</style>
+
+<div class="container margin-container">
+    <div class="row text-center full-height">
+        <div class="center-children">
+            <div class="login-register-container">
+                <img src="~/images/headers/codex_txt.png" alt="The Codex"/>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>
+                                <a asp-action="Codex" asp-route-sortOrder="name">@Html.DisplayNameFor(model => model.Name)</a>
+                            </th>
+                            <th>
+                                <a asp-action="Codex" asp-route-sortOrder="type">@Html.DisplayNameFor(model => model.Type)</a>
+                            </th>
+                            <th>
+                                <a asp-action="Codex" asp-route-sortOrder="strength">@Html.DisplayNameFor(model => model.Strength)</a>
+                            </th>
+                            <th>
+                                <a asp-action="Codex" asp-route-sortOrder="dexterity">@Html.DisplayNameFor(model => model.Dexterity)</a>
+                            </th>
+                            <th>
+                                <a asp-action="Codex" asp-route-sortOrder="intelligence">@Html.DisplayNameFor(model => model.Intelligence)</a>
+                            </th>
+                            <th>
+                                <a asp-action="Codex" asp-route-sortOrder="damage">@Html.DisplayNameFor(model => model.Damage)</a>
+                            </th>
+                            <th>
+                                <a asp-action="Codex" asp-route-sortOrder="defense">@Html.DisplayNameFor(model => model.Defense)</a>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Type)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Strength)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Dexterity)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Intelligence)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Damage)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Defense)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
