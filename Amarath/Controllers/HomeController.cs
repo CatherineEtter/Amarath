@@ -29,16 +29,33 @@ namespace Amarath.Controllers
         }
         public async Task<IActionResult> Codex(string sortOrder)
         {
-            ViewData["ItemData"] = String.IsNullOrEmpty(sortOrder) ? "name" : "";
             var items = from i in db.Items select i;
 
             switch(sortOrder)
             {
                 case "name":
-                    items.OrderBy(i => i.Name);
+                    items = items.OrderBy(i => i.Name);
+                    break;
+                case "type":
+                    items = items.OrderBy(i => i.Type);
+                    break;
+                case "intelligence":
+                    items = items.OrderByDescending(i => i.Intelligence);
+                    break;
+                case "dexterity":
+                    items = items.OrderByDescending(i => i.Dexterity);
+                    break;
+                case "strength":
+                    items = items.OrderByDescending(i => i.Strength);
+                    break;
+                case "damage":
+                    items = items.OrderByDescending(i => i.Damage);
+                    break;
+                case "defense":
+                    items = items.OrderByDescending(i => i.Defense);
                     break;
                 default:
-                    items.OrderBy(i => i.Name);
+                    items = items.OrderBy(i => i.Name);
                     break;
             }
             return View(await items.AsNoTracking().ToListAsync());
