@@ -71,7 +71,7 @@ namespace Amarath.Controllers
                     enemies = enemies.OrderBy(i => i.Name);
                     break;
                 case "rank":
-                    enemies = enemies.OrderBy(i => i.Rank);
+                    enemies = enemies.OrderByDescending(i => i.Rank);
                     break;
                 case "health":
                     enemies = enemies.OrderByDescending(i => i.Health);
