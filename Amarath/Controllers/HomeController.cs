@@ -83,7 +83,7 @@ namespace Amarath.Controllers
                     enemies = enemies.OrderByDescending(i => i.MaxDamage);
                     break;
                 default:
-                    enemies = enemies.OrderBy(i => i.Name);
+                    enemies = enemies.OrderByDescending(i => i.Rank);
                     break;
             }
             return View(await enemies.AsNoTracking().ToListAsync());

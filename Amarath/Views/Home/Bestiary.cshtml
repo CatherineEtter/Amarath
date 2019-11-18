@@ -21,10 +21,10 @@
                     <thead>
                         <tr>
                             <th>
-                                <a asp-action="Bestiary" asp-route-sortOrder="name">@Html.DisplayNameFor(model => model.Name)</a>
+                                <a asp-action="Bestiary" asp-route-sortOrder="rank">@Html.DisplayNameFor(model => model.Rank)</a>
                             </th>
                             <th>
-                                <a asp-action="Bestiary" asp-route-sortOrder="rank">@Html.DisplayNameFor(model => model.Rank)</a>
+                                <a asp-action="Bestiary" asp-route-sortOrder="name">@Html.DisplayNameFor(model => model.Name)</a>
                             </th>
                             <th>
                                 <a asp-action="Bestiary" asp-route-sortOrder="health">@Html.DisplayNameFor(model => model.Health)</a>
@@ -40,23 +40,23 @@
                     <tbody>
                         @foreach (var item in Model)
                         {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Name)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Rank)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Health)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.MinDamage)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.MaxDamage)
-                                </td>
-                            </tr>
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Rank)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Health)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MinDamage)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MaxDamage)
+                            </td>
+                        </tr>
                         }
                     </tbody>
                 </table>
