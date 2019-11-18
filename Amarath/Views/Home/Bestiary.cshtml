@@ -1,6 +1,6 @@
-﻿@model IEnumerable<Amarath.Models.Item>
+﻿@model IEnumerable<Amarath.Models.Enemy>
 @{
-    ViewData["Title"] = "Codex";
+    ViewData["Title"] = "Bestiary";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -16,7 +16,7 @@
     <div class="row text-center full-height">
         <div class="center-children">
             <div class="login-register-container">
-                <img src="~/images/headers/codex_txt.png" alt="The Codex"/>
+                <img src="~/images/headers/codex_txt.png" alt="Bestiary" />
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -24,22 +24,16 @@
                                 <a asp-action="Codex" asp-route-sortOrder="name">@Html.DisplayNameFor(model => model.Name)</a>
                             </th>
                             <th>
-                                <a asp-action="Codex" asp-route-sortOrder="type">@Html.DisplayNameFor(model => model.Type)</a>
+                                <a asp-action="Codex" asp-route-sortOrder="rank">@Html.DisplayNameFor(model => model.Rank)</a>
                             </th>
                             <th>
-                                <a asp-action="Codex" asp-route-sortOrder="strength">@Html.DisplayNameFor(model => model.Strength)</a>
+                                <a asp-action="Codex" asp-route-sortOrder="health">@Html.DisplayNameFor(model => model.Health)</a>
                             </th>
                             <th>
-                                <a asp-action="Codex" asp-route-sortOrder="dexterity">@Html.DisplayNameFor(model => model.Dexterity)</a>
+                                <a asp-action="Codex" asp-route-sortOrder="mindamage">@Html.DisplayNameFor(model => model.MinDamage)</a>
                             </th>
                             <th>
-                                <a asp-action="Codex" asp-route-sortOrder="intelligence">@Html.DisplayNameFor(model => model.Intelligence)</a>
-                            </th>
-                            <th>
-                                <a asp-action="Codex" asp-route-sortOrder="damage">@Html.DisplayNameFor(model => model.Damage)</a>
-                            </th>
-                            <th>
-                                <a asp-action="Codex" asp-route-sortOrder="defense">@Html.DisplayNameFor(model => model.Defense)</a>
+                                <a asp-action="Codex" asp-route-sortOrder="maxdamage">@Html.DisplayNameFor(model => model.MaxDamage)</a>
                             </th>
                         </tr>
                     </thead>
@@ -51,22 +45,16 @@
                                     @Html.DisplayFor(modelItem => item.Name)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Type)
+                                    @Html.DisplayFor(modelItem => item.Rank)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Strength)
+                                    @Html.DisplayFor(modelItem => item.Health)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Dexterity)
+                                    @Html.DisplayFor(modelItem => item.MinDamage)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Intelligence)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Damage)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Defense)
+                                    @Html.DisplayFor(modelItem => item.MaxDamage)
                                 </td>
                             </tr>
                         }

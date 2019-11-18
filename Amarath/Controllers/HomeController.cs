@@ -61,6 +61,34 @@ namespace Amarath.Controllers
             return View(await items.AsNoTracking().ToListAsync());
         }
 
+        public async Task<IActionResult> Bestiary(string sortOrder)
+        {
+            var enemies = from x in db.Enemies select x;
+
+            switch (sortOrder)
+            {
+                case "name":
+                    enemies = enemies.OrderBy(i => i.Name);
+                    break;
+                case "rank":
+                    enemies = enemies.OrderBy(i => i.Rank);
+                    break;
+                case "health":
+                    enemies = enemies.OrderByDescending(i => i.Health);
+                    break;
+                case "mindamage":
+                    enemies = enemies.OrderByDescending(i => i.MinDamage);
+                    break;
+                case "maxdamage":
+                    enemies = enemies.OrderByDescending(i => i.MaxDamage);
+                    break;
+                default:
+                    enemies = enemies.OrderBy(i => i.Name);
+                    break;
+            }
+            return View(await enemies.AsNoTracking().ToListAsync());
+        }
+
         public IActionResult Privacy()
         {
             return View();
