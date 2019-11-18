@@ -288,6 +288,7 @@ namespace Amarath.Controllers
                     }
                 }
             }
+            db.SaveChanges();
 
             if(enemy.Health <= 0)
             {
@@ -301,9 +302,63 @@ namespace Amarath.Controllers
                 AddToAction("You were killed by " + enemy.Name, txtDanger);
             }
         }
-        public async Task EquipItem(int itemId)
+        public async Task<IActionResult> EquipItem(int inventoryId)
         {
-            AddToAction("You equiped an item!", txtNormal);
+            var cUser = await userManager.GetUserAsync(User);
+            var cChar = db.Characters.First(x => x.UserId == cUser.Id);
+            var invId = db.Inventories.FirstOrDefault(x => x.InvID == inventoryId);
+            var selectedItem = db.Items.FirstOrDefault(x => x.ItemID == invId.ItemID);
+
+            var equippedItems = from x in db.Inventories where (x.Equiped == true && x.CharID == cChar.CharId) select x; //Get list of all equiped items
+
+            if(!invId.Equiped)
+            {
+                foreach (Inventory invItem in equippedItems)
+                {
+                    var currentItem = db.Items.FirstOrDefault(x => x.ItemID == invItem.ItemID);
+                    if (selectedItem.Type == currentItem.Type) //If player tries to equip two unique items
+                    {
+                        AddToAction("You are already wearing a " + selectedItem.Type, txtInfo);
+                        return View("Play");
+                    }
+                }
+                invId.Equiped = true;
+                AddToAction("You equiped the " + selectedItem.Name, txtNormal);
+            }
+            else
+            {
+                invId.Equiped = false;
+                AddToAction("You unequipped the " + selectedItem.Name, txtNormal);
+            }
+            db.SaveChanges();
+
+            return View("Play");
+        }
+
+        public async Task<IActionResult> UseItem(int inventoryId)
+        {
+            var cUser = await userManager.GetUserAsync(User);
+            var cChar = db.Characters.First(x => x.UserId == cUser.Id);
+            var invId = db.Inventories.FirstOrDefault(x => x.InvID == inventoryId);
+            var item = db.Items.FirstOrDefault(x => x.ItemID == invId.ItemID);
+            AddToAction("You used " + item.Name, txtNormal);
+
+            if(item.Name.Equals("Health Potion"))
+            {
+                var hp = 0;
+                if(cChar.MaxHealth - cChar.CurrentHealth < 20)
+                {
+                    hp = cChar.MaxHealth - cChar.CurrentHealth;
+                }
+                else
+                {
+                    hp = 20;
+                }
+                AddToAction(hp + " hp restored", txtSuccess);
+                cChar.CurrentHealth += hp;
+            }
+            db.SaveChanges();
+            return View("Play");
         }
         // =================== Methods to handle HTTP Session =================== //
         public void AddToDialog(string str, string txt)

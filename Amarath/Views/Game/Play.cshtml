@@ -147,7 +147,7 @@
             </div>
             <div class="modal-body">
                 <div class="row main-font-sm">
-                    <div class="col-md-4">Name</div>
+                    <div class="col-md-3">Name</div>
                     <div class="col-md-1">Quantity</div>
                     <div class="col-md-1">Type</div>
                     <div class="col-md-1">Strength</div>
@@ -156,13 +156,14 @@
                     <div class="col-md-1">Damage</div>
                     <div class="col-md-1">Defense</div>
                     <div class="col-md-1">Equip</div>
+                    <div class="col-md-1"></div>
                 </div>
                 <div class="body-font">
                     @foreach (var item in cInventory)
                     {
                         var detail = db.Items.First(x => x.ItemID == item.ItemID);
                     <div class="row">
-                        <div class="col-md-4">@detail.Name</div>
+                        <div class="col-md-3">@detail.Name</div>
                         <div class="col-md-1">@item.Quantity</div>
                         <div class="col-md-1">@detail.Type</div>
                         <div class="col-md-1">@detail.Strength</div>
@@ -170,7 +171,21 @@
                         <div class="col-md-1">@detail.Intelligence</div>
                         <div class="col-md-1">@detail.Damage</div>
                         <div class="col-md-1">@detail.Defense</div>
-                        <div class="col-md-1"><input type="checkbox" checked="@item.Equiped"/></div>
+                        @if (detail.IsEquippable)
+                        {
+                            if (item.Equiped)
+                            {
+                                <div class="col-md-1"><a asp-area="" asp-controller="Game" asp-action="EquipItem" asp-route-inventoryId="@item.InvID">Unequip</a></div>
+                            }
+                            else
+                            {
+                                <div class="col-md-1"><a asp-area="" asp-controller="Game" asp-action="EquipItem" asp-route-inventoryId="@item.InvID">Equip</a></div>
+                            }
+                        }
+                        else if (detail.IsUsable)
+                        {
+                            <div class="col-md-1"><a asp-area="" asp-controller="Game" asp-action="UseItem" asp-route-inventoryid="@item.InvID">Use</a></div>
+                        }
                     </div>
                         <div class="item-detail body-font-sm">
                             <div><em>@detail.Description</em></div>
