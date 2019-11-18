@@ -43,7 +43,7 @@
     <div class="game-header">
         <div class="row max-width">
             <div class="col-md-3">@cChar.Name</div>
-            <div class="col-md-6">Health</div>
+            <div class="col-md-6">Health: @cChar.CurrentHealth / @cChar.MaxHealth</div>
             <div class="col-md-3">Level @cChar.Rank</div>
         </div>
     </div>
@@ -70,30 +70,11 @@
     <div class="game-footer">
         <div class="row max-width">
             <div class="col-md-6">
-
-                <!--
-    <form class="center-block" runat="server" method="post" asp-controller="HomeController" asp-action="PlayerCommand">
-        <div>
-            <input asp-for="UserInput" class="body-font" type="text" />
-            <input type="submit" value="Enter" />
-        </div>
-    </form>
-    -->
-
                 @using (Html.BeginForm("PlayerCommand", "Game", FormMethod.Post))
                 {
                     <input asp-for="UserInput"/>
                     <button type="submit">Enter</button>
-                    <!---
-        <input class="body-font" type="text" />
-        <input type="submit" value="Enter" />
-        -->
                 }
-                <!---
-                    <button class="btn btn-default" onclick="PlayerCommand()">Enter</button>
-    <input" class="body-font" type="text" value="test" />
-    <button class="btn btn-default" onclick="StartGame()">Enter</button>
-    -->
                 <a asp-area="" asp-controller="Game" asp-action="LevelUp">Level Up</a>
             </div>
             <div class="col-md-3">
@@ -140,6 +121,14 @@
                         <div class="col-md-3">@cChar.MaxHealth</div>
                         <div class="col-md-3">Total</div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-9">Total Defense</div>
+                        <div class="col-md-3">@cChar.TotalDefense</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-9">Total Attack</div>
+                        <div class="col-md-3">@cChar.TotalAttack</div>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -158,7 +147,7 @@
             </div>
             <div class="modal-body">
                 <div class="row main-font-sm">
-                    <div class="col-md-5">Name</div>
+                    <div class="col-md-4">Name</div>
                     <div class="col-md-1">Quantity</div>
                     <div class="col-md-1">Type</div>
                     <div class="col-md-1">Strength</div>
@@ -166,21 +155,23 @@
                     <div class="col-md-1">Intelligence</div>
                     <div class="col-md-1">Damage</div>
                     <div class="col-md-1">Defense</div>
+                    <div class="col-md-1">Equip</div>
                 </div>
                 <div class="body-font">
                     @foreach (var item in cInventory)
                     {
                         var detail = db.Items.First(x => x.ItemID == item.ItemID);
-                        <div class="row">
-                            <div class="col-md-5">@detail.Name</div>
-                            <div class="col-md-1">@item.Quantity</div>
-                            <div class="col-md-1">@detail.Type</div>
-                            <div class="col-md-1">@detail.Strength</div>
-                            <div class="col-md-1">@detail.Dexterity</div>
-                            <div class="col-md-1">@detail.Intelligence</div>
-                            <div class="col-md-1">@detail.Damage</div>
-                            <div class="col-md-1">@detail.Defense</div>
-                        </div>
+                    <div class="row">
+                        <div class="col-md-4">@detail.Name</div>
+                        <div class="col-md-1">@item.Quantity</div>
+                        <div class="col-md-1">@detail.Type</div>
+                        <div class="col-md-1">@detail.Strength</div>
+                        <div class="col-md-1">@detail.Dexterity</div>
+                        <div class="col-md-1">@detail.Intelligence</div>
+                        <div class="col-md-1">@detail.Damage</div>
+                        <div class="col-md-1">@detail.Defense</div>
+                        <div class="col-md-1"><input type="checkbox" checked="@item.Equiped"/></div>
+                    </div>
                         <div class="item-detail body-font-sm">
                             <div><em>@detail.Description</em></div>
                         </div>
@@ -189,6 +180,7 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Apply</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
             </div>
         </div>
