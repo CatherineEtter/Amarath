@@ -170,6 +170,9 @@ namespace Amarath.Controllers
                         AddToDialog("You loot the corpse", txtNormal);
                         task = GetItems;
                         break;
+                    case "accept fate":
+                        AddToDialog("You have accepted yoru fate...", txtDanger);
+                        break;
                     default:
                         break;
                 }
@@ -415,6 +418,13 @@ namespace Amarath.Controllers
             }
             db.SaveChanges();
             return View("Play");
+        }
+        public async Task<IActionResult> ResetCharacter(int inventoryId)
+        {
+            var cUser = await userManager.GetUserAsync(User);
+            var cChar = db.Characters.First(x => x.UserId == cUser.Id);
+
+            return RedirectToAction("Home", "Index");
         }
         // =================== Methods to handle HTTP Session =================== //
         public void AddToDialog(string str, string txt)
