@@ -90,11 +90,16 @@ namespace Amarath.Controllers
             {
                 AddToChoices("explore");
                 AddToChoices("proceed");
-                AddToChoices("leave");
+                
                 AddToDialog("You enter and look around.", txtNormal);
                 AddToDialog(" - Explore", txtOptions);
                 AddToDialog(" - Proceed", txtOptions);
-                AddToDialog(" - Leave", txtOptions);
+                
+                if(Convert.ToInt32(HttpContext.Session.GetString("DungeonLevel")) != 1)
+                {
+                    AddToChoices("back");
+                    AddToDialog(" - Back", txtOptions);
+                }
             }
 
             if (randNum == 0)
@@ -109,12 +114,14 @@ namespace Amarath.Controllers
             var cEnemy = db.Enemies.First(x => x.Rank == dlevel);
 
             AddToChoices("attack");
-            AddToChoices("run");
-
             AddToAction("A " + cEnemy.Name + " appears!", txtDanger);
             AddToAction("Lvl: " + cEnemy.Rank + "| HP: " + cEnemy.Health + "| Min Dmg: " + cEnemy.MinDamage + "| Max Dmg: " + cEnemy.MaxDamage, txtInfo);
             AddToDialog(" - Attack", txtOptions);
-            AddToDialog(" - Run", txtOptions);
+            if(Convert.ToInt32(HttpContext.Session.GetString("DungeonLevel")) != 1)
+            {
+                AddToChoices("run");
+                AddToDialog(" - Run", txtOptions);
+            }
 
             return RedirectToAction("Play", "Game");
         }
@@ -136,7 +143,7 @@ namespace Amarath.Controllers
                         AddToDialog("You move on...", txtNormal);
                         task = AscendLevel;
                         break;
-                    case "leave":
+                    case "back":
                         AddToDialog("You decide to go back", txtNormal);
                         task = DescendLevel;
                         break;
@@ -272,9 +279,9 @@ namespace Amarath.Controllers
             db.SaveChanges();
 
             ClearChoices();
-            AddToChoices("leave");
+            AddToChoices("back");
             AddToChoices("proceed");
-            AddToDialog(" - Leave", txtOptions);
+            AddToDialog(" - Back", txtOptions);
             AddToDialog(" - Proceed", txtOptions);
 
             return View("Play");
