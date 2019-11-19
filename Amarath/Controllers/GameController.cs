@@ -231,6 +231,35 @@ namespace Amarath.Controllers
 
         public async Task GetItems()
         {
+            Random rand = new Random();
+            int randNumofloot = rand.Next(0, 3);
+
+            for (int i = 0; randNumofloot > i; i++)
+            {
+                int randloot = rand.Next(0, 23);
+               // var item = db.Items.First(x => x.ItemID == randloot);
+
+               // var loots = (from a in db.Items
+                           //  where a.ItemID == randloot
+                            // select a.Name);
+
+
+                var cUser = await userManager.GetUserAsync(User);
+                var cChar = db.Characters.First(x => x.UserId == cUser.Id);
+                var item = db.Items.First(x => x.ItemID == randloot);
+                var newInv = new Inventory()
+                {
+                    CharID = cChar.CharId,
+                    ItemID = item.ItemID,
+                    Quantity = 1,
+                    Equiped = false
+                };
+
+                db.Inventories.Add(newInv);
+                db.SaveChanges();
+            }
+
+
             /*
              * Use LinQ to get items
              */
