@@ -133,9 +133,11 @@ namespace Amarath.Controllers
                 switch (viewModel.UserInput.ToLower())
                 {
                     case "proceed":
+                        AddToDialog("You move on...", txtNormal);
                         task = AscendLevel;
                         break;
                     case "leave":
+                        AddToDialog("You decide to go back", txtNormal);
                         task = DescendLevel;
                         break;
                     case "explore":
@@ -161,6 +163,7 @@ namespace Amarath.Controllers
                         task = DescendLevel;
                         break;
                     case "attack":
+                        AddToDialog("You decide to attack...", txtNormal);
                         task = StartBattle;
                         break;
                     case "loot":
@@ -229,7 +232,7 @@ namespace Amarath.Controllers
             }
         }
 
-        public async Task GetItems()
+        public async Task<IActionResult> GetItems()
         {
             Random rand = new Random();
             int randNumofloot = rand.Next(0, 3);
@@ -255,14 +258,23 @@ namespace Amarath.Controllers
                     Equiped = false
                 };
 
+                AddToAction("You found a(n) " + item.Name + "!", txtSuccess);
+
                 db.Inventories.Add(newInv);
-                db.SaveChanges();
             }
+            if(randNumofloot == 0)
+            {
+                AddToAction("You didn't find anything...",txtNormal);
+            }
+            db.SaveChanges();
 
+            ClearChoices();
+            AddToChoices("leave");
+            AddToChoices("proceed");
+            AddToDialog(" - Leave", txtOptions);
+            AddToDialog(" - Proceed", txtOptions);
 
-            /*
-             * Use LinQ to get items
-             */
+            return View("Play");
         }
         //TODO: Enemy get's regenerated, but change this later when there is time.
         public async Task StartBattle()
@@ -272,8 +284,12 @@ namespace Amarath.Controllers
             int dlevel = Int32.Parse(HttpContext.Session.GetString("DungeonLevel"));
             var cEnemy = db.Enemies.First(x => x.Rank == dlevel);
             Random rand = new Random();
+            Enemy enemy = new Enemy();
+            enemy.Name = cEnemy.Name;
+            enemy.Health = cEnemy.Health;
+            enemy.MinDamage = cEnemy.MinDamage;
+            enemy.MaxDamage = cEnemy.MaxDamage;
 
-            Enemy enemy = cEnemy;
             while (enemy.Health > 0 && cChar.CurrentHealth > 0)
             {
                 AddToAction(enemy.Name + "'s HP: " + enemy.Health, txtInfo);
@@ -325,6 +341,9 @@ namespace Amarath.Controllers
                 ClearChoices();
                 AddToChoices("loot");
                 AddToChoices("proceed");
+                AddToDialog(" - Loot", txtOptions);
+                AddToDialog(" - Proceed", txtOptions);
+
             }
             else if(cChar.CurrentHealth <= 0)
             {
