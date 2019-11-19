@@ -296,39 +296,46 @@ namespace Amarath.Controllers
             while (enemy.Health > 0 && cChar.CurrentHealth > 0)
             {
                 AddToAction(enemy.Name + "'s HP: " + enemy.Health, txtInfo);
+                //Player attacks
                 if (cChar.CurrentHealth > 0)
                 {
-                    var chance = rand.Next(1, 100);
+                    var hitChance = rand.Next(1, 100);
+                    var hitValue = cChar.TotalAttack;
+
                     AddToAction("You go in for an attack...", txtNormal);
-                    if (chance < 10)
+                    if (hitChance < 10)
                     {
-                        enemy.Health -= 25;
-                        AddToAction("Critical! You did 25 hp of damage!", txtInfo);
+                        var crit = hitValue + rand.Next(1, 10);
+                        enemy.Health -= crit;
+                        AddToAction("Critical! You did " + crit + " hp of damage!", txtInfo);
                     }
-                    else if (chance < 70)
+                    else if (hitChance < 70)
                     {
-                        enemy.Health -= 10;
-                        AddToAction(" You did 10 hp of damage!", txtInfo);
+                        enemy.Health -= hitValue;
+                        AddToAction(" You did " + hitValue + " hp of damage!", txtInfo);
                     }
                     else
                     {
                         AddToAction(enemy.Name + " dodged the attack!", txtInfo);
                     }
                 }
-
+                //Enemy attacks
                 if(enemy.Health > 0)
                 {
-                    var chance = rand.Next(1, 100);
+                    var hitChance = rand.Next(1, 100);
+                    var hitValue = rand.Next(enemy.MinDamage, enemy.MaxDamage + 1);
+
                     AddToAction(enemy.Name + " goes in for an attack...", txtNormal);
-                    if (chance < 10)
+                    if (hitChance < 10)
                     {
-                        cChar.CurrentHealth -= 10;
-                        AddToAction("Critical! " + enemy.Name + " did 10 hp of damage!", txtInfo);
+                        var crit = enemy.MaxDamage + rand.Next(1, 10);
+                        cChar.CurrentHealth -= crit;
+                        AddToAction("Critical! " + enemy.Name + " did " + crit + " hp of damage!", txtInfo);
                     }
-                    else if (chance < 70)
+                    else if (hitChance < 70)
                     {
                         cChar.CurrentHealth -= 5;
-                        AddToAction(enemy.Name + " did 5 hp of damage!", txtInfo);
+                        AddToAction(enemy.Name + " did " + hitValue + " hp of damage!", txtInfo);
                     }
                     else
                     {
