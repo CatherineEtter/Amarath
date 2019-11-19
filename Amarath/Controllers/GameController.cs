@@ -382,10 +382,36 @@ namespace Amarath.Controllers
                 AddToAction("You unequipped the " + selectedItem.Name, txtNormal);
             }
             db.SaveChanges();
+            UpdateTotals();
 
             return View("Play");
         }
 
+        public async Task<IActionResult> UpdateTotals()
+        {
+            var cUser = await userManager.GetUserAsync(User);
+            var cChar = db.Characters.First(x => x.UserId == cUser.Id);
+            var equippedItems = from x in db.Inventories where (x.Equiped == true && x.CharID == cChar.CharId) select x;
+
+            //Reset Character's totals
+            cChar.TotalStrength = cChar.Strength;
+            cChar.TotalDexterity = cChar.Dexterity;
+            cChar.TotalIntelligence = cChar.Intelligence;
+            cChar.TotalDefense = 0;
+            cChar.TotalAttack = 0;
+
+            foreach (Inventory inv in equippedItems)
+            {
+                var currentItem = db.Items.FirstOrDefault(x => x.ItemID == inv.ItemID);
+                cChar.TotalStrength += currentItem.Strength;
+                cChar.TotalDexterity += currentItem.Dexterity;
+                cChar.TotalIntelligence += currentItem.Intelligence;
+                cChar.TotalDefense += currentItem.Defense;
+                cChar.TotalAttack += currentItem.Damage;
+            }
+            db.SaveChanges();
+            return View("Play");
+        }
         public async Task<IActionResult> UseItem(int inventoryId)
         {
             var cUser = await userManager.GetUserAsync(User);
