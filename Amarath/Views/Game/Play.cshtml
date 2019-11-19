@@ -48,7 +48,7 @@
         </div>
     </div>
     <div id="game-stage" class="row text-left">
-        <div id="game-dialog-box" class="col-md-8">
+        <div class="col-md-8 game-dialog-box">
             @{
                 var dialog = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(HttpContextAccessor.HttpContext.Session.GetString("Dialog"));
                 @foreach (KeyValuePair<string, string> item in dialog)
@@ -57,7 +57,7 @@
                 }
             }
         </div>
-        <div id="game-action-box" class="col-md-4">
+        <div class="col-md-4 game-action-box">
             @{
                 var action = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(HttpContextAccessor.HttpContext.Session.GetString("Action"));
                 @foreach (KeyValuePair<string, string> item in action)
