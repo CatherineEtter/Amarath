@@ -20,5 +20,7 @@ namespace Amarath.Models
         public int Intelligence { get; set; }
         public int Damage { get; set; }
         public int Defense { get; set; }
+        public Boolean IsEquippable { get; set; }
+        public Boolean IsUsable { get; set; }
     }
 }

@@ -133,9 +133,11 @@ namespace Amarath.Controllers
                 switch (viewModel.UserInput.ToLower())
                 {
                     case "proceed":
+                        AddToDialog("You move on...", txtNormal);
                         task = AscendLevel;
                         break;
                     case "leave":
+                        AddToDialog("You decide to go back", txtNormal);
                         task = DescendLevel;
                         break;
                     case "explore":
@@ -161,6 +163,7 @@ namespace Amarath.Controllers
                         task = DescendLevel;
                         break;
                     case "attack":
+                        AddToDialog("You decide to attack...", txtNormal);
                         task = StartBattle;
                         break;
                     case "loot":
@@ -229,7 +232,7 @@ namespace Amarath.Controllers
             }
         }
 
-        public async Task GetItems()
+        public async Task<IActionResult> GetItems()
         {
             Random rand = new Random();
             int randNumofloot = rand.Next(0, 3);
@@ -255,14 +258,23 @@ namespace Amarath.Controllers
                     Equiped = false
                 };
 
+                AddToAction("You found a(n) " + item.Name + "!", txtSuccess);
+
                 db.Inventories.Add(newInv);
-                db.SaveChanges();
             }
+            if(randNumofloot == 0)
+            {
+                AddToAction("You didn't find anything...",txtNormal);
+            }
+            db.SaveChanges();
 
+            ClearChoices();
+            AddToChoices("leave");
+            AddToChoices("proceed");
+            AddToDialog(" - Leave", txtOptions);
+            AddToDialog(" - Proceed", txtOptions);
 
-            /*
-             * Use LinQ to get items
-             */
+            return View("Play");
         }
         //TODO: Enemy get's regenerated, but change this later when there is time.
         public async Task StartBattle()
@@ -272,8 +284,12 @@ namespace Amarath.Controllers
             int dlevel = Int32.Parse(HttpContext.Session.GetString("DungeonLevel"));
             var cEnemy = db.Enemies.First(x => x.Rank == dlevel);
             Random rand = new Random();
+            Enemy enemy = new Enemy();
+            enemy.Name = cEnemy.Name;
+            enemy.Health = cEnemy.Health;
+            enemy.MinDamage = cEnemy.MinDamage;
+            enemy.MaxDamage = cEnemy.MaxDamage;
 
-            Enemy enemy = cEnemy;
             while (enemy.Health > 0 && cChar.CurrentHealth > 0)
             {
                 AddToAction(enemy.Name + "'s HP: " + enemy.Health, txtInfo);
@@ -317,6 +333,7 @@ namespace Amarath.Controllers
                     }
                 }
             }
+            db.SaveChanges();
 
             if(enemy.Health <= 0)
             {
@@ -324,15 +341,80 @@ namespace Amarath.Controllers
                 ClearChoices();
                 AddToChoices("loot");
                 AddToChoices("proceed");
+                AddToDialog(" - Loot", txtOptions);
+                AddToDialog(" - Proceed", txtOptions);
+
             }
             else if(cChar.CurrentHealth <= 0)
             {
                 AddToAction("You were killed by " + enemy.Name, txtDanger);
             }
         }
-        public async Task EquipItem(int itemId)
+        public async Task<IActionResult> EquipItem(int inventoryId)
         {
-            AddToAction("You equiped an item!", txtNormal);
+            var cUser = await userManager.GetUserAsync(User);
+            var cChar = db.Characters.First(x => x.UserId == cUser.Id);
+            var invId = db.Inventories.FirstOrDefault(x => x.InvID == inventoryId);
+            var selectedItem = db.Items.FirstOrDefault(x => x.ItemID == invId.ItemID);
+
+            var equippedItems = from x in db.Inventories where (x.Equiped == true && x.CharID == cChar.CharId) select x; //Get list of all equiped items
+
+            if(!invId.Equiped)
+            {
+                foreach (Inventory invItem in equippedItems)
+                {
+                    var currentItem = db.Items.FirstOrDefault(x => x.ItemID == invItem.ItemID);
+                    if (selectedItem.Type == currentItem.Type) //If player tries to equip two unique items
+                    {
+                        AddToAction("You are already wearing a " + selectedItem.Type, txtInfo);
+                        return View("Play");
+                    }
+                }
+                invId.Equiped = true;
+                AddToAction("You equiped the " + selectedItem.Name, txtNormal);
+            }
+            else
+            {
+                invId.Equiped = false;
+                AddToAction("You unequipped the " + selectedItem.Name, txtNormal);
+            }
+            db.SaveChanges();
+
+            return View("Play");
+        }
+
+        public async Task<IActionResult> UseItem(int inventoryId)
+        {
+            var cUser = await userManager.GetUserAsync(User);
+            var cChar = db.Characters.First(x => x.UserId == cUser.Id);
+            var invId = db.Inventories.FirstOrDefault(x => x.InvID == inventoryId);
+            var item = db.Items.FirstOrDefault(x => x.ItemID == invId.ItemID);
+            AddToAction("You used " + item.Name, txtNormal);
+
+            if(item.Name.Equals("Health Potion"))
+            {
+                var hp = 0;
+                if(cChar.MaxHealth - cChar.CurrentHealth < 20)
+                {
+                    hp = cChar.MaxHealth - cChar.CurrentHealth;
+                }
+                else
+                {
+                    hp = 20;
+                }
+                AddToAction(hp + " hp restored", txtSuccess);
+                cChar.CurrentHealth += hp;
+            }
+            if(invId.Quantity <= 1)
+            {
+                db.Inventories.Remove(invId);
+            }
+            else
+            {
+                invId.Quantity -= 1;
+            }
+            db.SaveChanges();
+            return View("Play");
         }
         // =================== Methods to handle HTTP Session =================== //
         public void AddToDialog(string str, string txt)
