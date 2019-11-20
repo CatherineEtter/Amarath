@@ -55,6 +55,7 @@ namespace Amarath.Controllers
                 HttpContext.Session.SetString("Action", JsonConvert.SerializeObject(listAction));
                 HttpContext.Session.SetString("DungeonLevel", location.DungeonLevel.ToString());
                 GenerateOptions();
+                await UpdateTotals();
             }
             return View();
         }
@@ -77,7 +78,7 @@ namespace Amarath.Controllers
         public void GenerateOptions()
         {
             Random rand = new Random();
-            int randNum = rand.Next(0, 2); //50% chance to spawn a monster TODO: Change later
+            int randNum = rand.Next(0, 100); //50% chance to spawn a monster TODO: Change later
 
             ClearChoices();
             //Don't spawn anything in level 0
@@ -86,7 +87,7 @@ namespace Amarath.Controllers
                 AddToChoices("proceed");
                 AddToDialog(" - Proceed", txtOptions);
             }
-            else if(randNum == 1)
+            else if(randNum < 20)
             {
                 AddToChoices("explore");
                 AddToChoices("proceed");
@@ -101,8 +102,7 @@ namespace Amarath.Controllers
                     AddToDialog(" - Back", txtOptions);
                 }
             }
-
-            if (randNum == 0)
+            else
             {
                 SpawnEnemies();
             }
@@ -372,9 +372,14 @@ namespace Amarath.Controllers
                 AddToDialog(" - Proceed", txtOptions);
 
             }
-            else if(cChar.CurrentHealth <= 0)
+            if(cChar.CurrentHealth <= 0)
             {
+                AddToDialog("You have died!", txtDanger);
+                AddToAction("You have died!", txtDanger);
                 AddToAction("You were killed by " + enemy.Name, txtDanger);
+                ClearChoices();
+                AddToChoices("accept fate");
+                AddToDialog("- Accept Fate", txtOptions);
             }
         }
         public async Task<IActionResult> EquipItem(int inventoryId)
@@ -406,7 +411,7 @@ namespace Amarath.Controllers
                 AddToAction("You unequipped the " + selectedItem.Name, txtNormal);
             }
             db.SaveChanges();
-            UpdateTotals();
+            await UpdateTotals();
 
             return View("Play");
         }
@@ -433,6 +438,7 @@ namespace Amarath.Controllers
                 cChar.TotalDefense += currentItem.Defense;
                 cChar.TotalAttack += currentItem.Damage;
             }
+            cChar.TotalAttack += Convert.ToInt32(Math.Floor(cChar.TotalStrength * .20));
             db.SaveChanges();
             return View("Play");
         }
@@ -473,7 +479,15 @@ namespace Amarath.Controllers
         {
             var cUser = await userManager.GetUserAsync(User);
             var cChar = db.Characters.First(x => x.UserId == cUser.Id);
+            var inventories = from i in db.Inventories select i;
 
+            foreach(Inventory inv in inventories)
+            {
+                if(inv.CharID == cChar.CharId)
+                {
+                    db.Inventories.Remove(inv);
+                }
+            }
             //Absolutly brutal
             db.Characters.Remove(cChar);
             db.SaveChanges();
