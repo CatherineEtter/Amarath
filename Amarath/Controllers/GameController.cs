@@ -178,7 +178,7 @@ namespace Amarath.Controllers
                         task = GetItems;
                         break;
                     case "accept fate":
-                        AddToDialog("You have accepted yoru fate...", txtDanger);
+                        AddToDialog("You have accepted your fate...", txtDanger);
                         break;
                     default:
                         break;
@@ -300,53 +300,62 @@ namespace Amarath.Controllers
             enemy.MinDamage = cEnemy.MinDamage;
             enemy.MaxDamage = cEnemy.MaxDamage;
 
+            //Strength modifies TotalAttack
+            //Intelligence modifies loot chance and critical attack
+            //Dexterity affects dodge chance
             while (enemy.Health > 0 && cChar.CurrentHealth > 0)
             {
                 AddToAction(enemy.Name + "'s HP: " + enemy.Health, txtInfo);
                 //Player attacks
                 if (cChar.CurrentHealth > 0)
                 {
+                    //Max crit chance is 60%
+                    //Base enemy dodge is 10%
+                    var critChance = 10 + cChar.Intelligence > 60 ? 60 : 10 + cChar.Intelligence;
                     var hitChance = rand.Next(1, 100);
                     var hitValue = cChar.TotalAttack;
 
                     AddToAction("You go in for an attack...", txtNormal);
-                    if (hitChance < 10)
+                    if (hitChance < critChance)
                     {
-                        var crit = hitValue + rand.Next(1, 10);
+                        var crit = hitValue + rand.Next(5, 20);
                         enemy.Health -= crit;
                         AddToAction("Critical! You did " + crit + " hp of damage!", txtInfo);
                     }
-                    else if (hitChance < 70)
+                    else if (hitChance < critChance + 10)
                     {
-                        enemy.Health -= hitValue;
-                        AddToAction(" You did " + hitValue + " hp of damage!", txtInfo);
+                        AddToAction(enemy.Name + " dodged the attack!", txtInfo);
                     }
                     else
                     {
-                        AddToAction(enemy.Name + " dodged the attack!", txtInfo);
+                        enemy.Health -= hitValue;
+                        AddToAction(" You did " + hitValue + " hp of damage!", txtInfo);
                     }
                 }
                 //Enemy attacks
                 if(enemy.Health > 0)
                 {
+                    //Max dodge chance is 70
+                    //10% chance for enemy crit
+                    var dodgeChance = 10 + cChar.Dexterity > 70 ? 70 : 10 + cChar.Dexterity;
                     var hitChance = rand.Next(1, 100);
                     var hitValue = rand.Next(enemy.MinDamage, enemy.MaxDamage + 1);
 
                     AddToAction(enemy.Name + " goes in for an attack...", txtNormal);
-                    if (hitChance < 10)
+                    if (hitChance < dodgeChance)
+                    {
+                        AddToAction("You dodged the attack!", txtInfo);
+                    }
+                    else if (hitChance < dodgeChance + 10)
                     {
                         var crit = enemy.MaxDamage + rand.Next(1, 10);
                         cChar.CurrentHealth -= crit;
-                        AddToAction("Critical! " + enemy.Name + " did " + crit + " hp of damage!", txtInfo);
-                    }
-                    else if (hitChance < 70)
-                    {
-                        cChar.CurrentHealth -= 5;
-                        AddToAction(enemy.Name + " did " + hitValue + " hp of damage!", txtInfo);
+                        AddToAction("Critical! " + enemy.Name + " did " + crit + " hp of damage!", txtDanger);
                     }
                     else
                     {
-                        AddToAction("You dodged the attack!", txtInfo);
+                        cChar.CurrentHealth -= 5;
+                        AddToAction(enemy.Name + " did " + hitValue + " hp of damage!", txtDanger);
                     }
                 }
             }
