@@ -52,7 +52,8 @@ namespace Amarath.Controllers
 
             if(cChar.CurrentHealth <= 0)
             {
-                DeleteCharacter();
+                await DeleteCharacter();
+                return View("Death");
             }
             if (HttpContext.Session.GetString("Dialog") == null)
             {
@@ -188,7 +189,8 @@ namespace Amarath.Controllers
                         break;
                     case "accept fate":
                         AddToDialog("You have accepted your fate...", txtDanger);
-                        task = DeleteCharacter;
+                        Task.Run(async () => { await DeleteCharacter(); }).Wait();
+                        return View("Death");
                         break;
                     default:
                         break;
@@ -206,6 +208,7 @@ namespace Amarath.Controllers
 
             viewModel.UserInput = ""; //Reset user input
             return View("Play", viewModel);
+
         }
 
         public async Task AscendLevel()
@@ -484,7 +487,7 @@ namespace Amarath.Controllers
             db.SaveChanges();
             return View("Play");
         }
-        public async Task<IActionResult> DeleteCharacter()
+        public async Task<ViewResult> DeleteCharacter()
         {
             var cUser = await userManager.GetUserAsync(User);
             var cChar = db.Characters.First(x => x.UserId == cUser.Id);
@@ -500,8 +503,7 @@ namespace Amarath.Controllers
             //Absolutly brutal
             db.Characters.Remove(cChar);
             db.SaveChanges();
-
-            return RedirectToAction("Game", "Death");
+            return View("Death");
         }
         // =================== Methods to handle HTTP Session =================== //
         public void AddToDialog(string str, string txt)

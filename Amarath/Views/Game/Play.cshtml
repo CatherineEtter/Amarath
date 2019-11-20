@@ -21,7 +21,7 @@
     var db = new AmarathContext(optionsBuilder.Options);
 
     var cUser = await userManager.GetUserAsync(User);
-    var cChar = db.Characters.First(x => x.UserId == cUser.Id);
+    var cChar = db.Characters.FirstOrDefault(x => x.UserId == cUser.Id);
     var cInventory = db.Inventories.Where(x => x.CharID == cChar.CharId);
 }
 <style>
@@ -58,6 +58,7 @@
                         <span style="color: @item.Value">@item.Key</span><br />
                     }
                 }
+                <br />
             </div>
             <div id="action-box" class="col-md-4 game-action-box">
                 @{
@@ -67,6 +68,7 @@
                         <span style="color: @item.Value">@item.Key</span><br />
                     }
                 }
+                <br />
             </div>
         </div>
         <div class="game-footer">
