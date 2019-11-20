@@ -179,6 +179,7 @@ namespace Amarath.Controllers
                         break;
                     case "accept fate":
                         AddToDialog("You have accepted your fate...", txtDanger);
+                        task = DeleteCharacter;
                         break;
                     default:
                         break;
@@ -468,10 +469,14 @@ namespace Amarath.Controllers
             db.SaveChanges();
             return View("Play");
         }
-        public async Task<IActionResult> ResetCharacter(int inventoryId)
+        public async Task<IActionResult> DeleteCharacter()
         {
             var cUser = await userManager.GetUserAsync(User);
             var cChar = db.Characters.First(x => x.UserId == cUser.Id);
+
+            //Absolutly brutal
+            db.Characters.Remove(cChar);
+            db.SaveChanges();
 
             return RedirectToAction("Home", "Index");
         }
