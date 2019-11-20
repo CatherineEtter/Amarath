@@ -30,7 +30,7 @@ namespace Amarath.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateCharacter(CharacterViewModel viewModel)
+        public async Task<ActionResult> CreateCharacterAsync(CharacterViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
@@ -50,7 +50,12 @@ namespace Amarath.Controllers
                     CurrentHealth = 100,
                     MaxHealth = 100,
                     Experience = 0,
-                    DungeonLevel = 0
+                    DungeonLevel = 0,
+                    TotalAttack = 0,
+                    TotalDefense = 0,
+                    TotalDexterity = viewModel.Dexterity,
+                    TotalStrength = viewModel.Strength,
+                    TotalIntelligence = viewModel.Intelligence
                 };
                 db.Characters.Add(character);
                 db.SaveChanges();
