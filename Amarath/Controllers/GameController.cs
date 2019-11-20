@@ -37,6 +37,10 @@ namespace Amarath.Controllers
         {
             return View();
         }
+        public IActionResult Death()
+        {
+            return View();
+        }
         public async Task<IActionResult> Play()
         {
             var cUser = await userManager.GetUserAsync(User);
@@ -45,6 +49,11 @@ namespace Amarath.Controllers
 
             List<KeyValuePair<string, string>> listDialog = null;
             List<KeyValuePair<string, string>> listAction = null;
+
+            if(cChar.CurrentHealth <= 0)
+            {
+                DeleteCharacter();
+            }
             if (HttpContext.Session.GetString("Dialog") == null)
             {
                 listDialog = new List<KeyValuePair<string, string>>();
@@ -189,7 +198,7 @@ namespace Amarath.Controllers
             {
                 AddToDialog(viewModel.UserInput + " is not a valid choice!", txtDanger);
             }
-            //Call the action down here because the Session Dialog needs to be set so it doesn't get overwritten.
+            //Call the action down here because the Session Dialog needs to be set so it doesn't get overwritten
             if (task != null)
             {
                 Task.Run(async () => { await task(); }).Wait();
@@ -492,7 +501,7 @@ namespace Amarath.Controllers
             db.Characters.Remove(cChar);
             db.SaveChanges();
 
-            return RedirectToAction("Home", "Index");
+            return RedirectToAction("Game", "Death");
         }
         // =================== Methods to handle HTTP Session =================== //
         public void AddToDialog(string str, string txt)
