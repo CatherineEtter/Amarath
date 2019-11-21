@@ -62,7 +62,7 @@
                     <div class="row">
                         <div class="col-sm-7 col-md-7">
                             <label asp-for="Name" runat="server"><span class="text-danger">*</span>Name</label>
-                            <input type="text" asp-for="Name" class="form-control" required/>
+                            <input type="text" asp-for="Name" class="form-control" required />
                         </div>
                         <div class="col-sm-5 col-md-5">
                             <label asp-for="Rank" runat="server">Rank</label>
@@ -97,7 +97,7 @@
                                 </td>
                             }
                             <td>
-                                <input asp-for="Strength" runat="server" id="Str" class="form-control text-center" value="@(classes.First().Strength)" readonly/>
+                                <input asp-for="Strength" runat="server" id="Str" class="form-control text-center" value="@(classes.First().Strength)" readonly />
                             </td>
                             <td>Strength</td>
                         </tr>
@@ -142,7 +142,7 @@
             </div>
         </div>
         <div class="row">
-            <input class="btn btn-primary pull-right" type="submit" style="margin-right:1em;" asp-area="" asp-controller="Character" asp-action="CreateCharacter" value="Submit" disabled/>
+            <input class="btn btn-primary pull-right" type="submit" style="margin-right:1em;" asp-area="" asp-controller="Character" asp-action="CreateCharacterAsync" value="Submit" disabled />
         </div>
     </form>
 </div>

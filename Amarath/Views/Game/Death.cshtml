@@ -1,0 +1,44 @@
+﻿@using Amarath.DAL.Data;
+@using Amarath.DAL.Models;
+@model Amarath.DAL.Models.CharacterViewModel;
+@using Microsoft.EntityFrameworkCore;
+
+@inject UserManager<IdentityUserExt> userManager;
+
+@{
+    ViewData["Title"] = "Death";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var currentUser = await userManager.GetUserAsync(User);
+
+    var optionsBuilder = new DbContextOptionsBuilder<AmarathContext>();
+    var db = new AmarathContext(optionsBuilder.Options);
+    var characters = db.Characters.Where(x => x.UserId == currentUser.Id);
+}
+
+<style>
+    body {
+        background-color: #f0f0f0;
+        background: url(/images/wall_background.png) no-repeat center center fixed;
+        background-size: cover;
+    }
+</style>
+
+<div class="container margin-container">
+    <div class="row text-center full-height">
+        <div class="center-children">
+            <div class="login-register-container">
+                <img src="~/images/headers/codex_txt.png" alt="The Codex" />
+                <p>Your character has died!</p>
+                <div>
+                    <form method="post" asp-action="CreateCharacter" asp-controller="Character">
+                        <button type="submit" class="btn navbar-btn" @(characters.Count() > 0 ? "disabled" : String.Empty)>
+                            Create Character
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

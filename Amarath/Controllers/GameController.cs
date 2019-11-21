@@ -37,6 +37,10 @@ namespace Amarath.Controllers
         {
             return View();
         }
+        public IActionResult Death()
+        {
+            return View();
+        }
         public async Task<IActionResult> Play()
         {
             var cUser = await userManager.GetUserAsync(User);
@@ -45,6 +49,12 @@ namespace Amarath.Controllers
 
             List<KeyValuePair<string, string>> listDialog = null;
             List<KeyValuePair<string, string>> listAction = null;
+
+            if(cChar.CurrentHealth <= 0)
+            {
+                await DeleteCharacter();
+                return View("Death");
+            }
             if (HttpContext.Session.GetString("Dialog") == null)
             {
                 listDialog = new List<KeyValuePair<string, string>>();
@@ -55,6 +65,7 @@ namespace Amarath.Controllers
                 HttpContext.Session.SetString("Action", JsonConvert.SerializeObject(listAction));
                 HttpContext.Session.SetString("DungeonLevel", location.DungeonLevel.ToString());
                 GenerateOptions();
+                await UpdateTotals();
             }
             return View();
         }
@@ -65,19 +76,23 @@ namespace Amarath.Controllers
             var cUser = await userManager.GetUserAsync(User);
             var cChar = db.Characters.First(x => x.UserId == cUser.Id);
             cChar.Rank += 1;
+            cChar.Strength += 1;
+            cChar.Dexterity += 1;
+            cChar.Intelligence += 1;
+            cChar.MaxHealth += 10;
+            cChar.CurrentHealth = cChar.MaxHealth;
+            cChar.Experience = 0;
             db.SaveChanges();
 
-            //Add Message to action list
-            var listAction = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(HttpContext.Session.GetString("Action"));
-            listAction.Add(new KeyValuePair<string, string>("You are now level " + cChar.Rank, txtPlayer));
-            HttpContext.Session.SetString("Action", JsonConvert.SerializeObject(listAction));
+            AddToAction("You gained a level! You are now level " + cChar.Rank, txtSuccess);
+            AddToAction("You have been healed, gained a point to all skills and 10 hp points", txtSuccess);
 
             return RedirectToAction("Play", "Game");
         }
         public void GenerateOptions()
         {
             Random rand = new Random();
-            int randNum = rand.Next(0, 2); //50% chance to spawn a monster TODO: Change later
+            int randNum = rand.Next(0, 100); //50% chance to spawn a monster TODO: Change later
 
             ClearChoices();
             //Don't spawn anything in level 0
@@ -86,7 +101,7 @@ namespace Amarath.Controllers
                 AddToChoices("proceed");
                 AddToDialog(" - Proceed", txtOptions);
             }
-            else if(randNum == 1)
+            else if(randNum < 20)
             {
                 AddToChoices("explore");
                 AddToChoices("proceed");
@@ -101,8 +116,7 @@ namespace Amarath.Controllers
                     AddToDialog(" - Back", txtOptions);
                 }
             }
-
-            if (randNum == 0)
+            else
             {
                 SpawnEnemies();
             }
@@ -179,7 +193,8 @@ namespace Amarath.Controllers
                         break;
                     case "accept fate":
                         AddToDialog("You have accepted your fate...", txtDanger);
-                        task = DeleteCharacter;
+                        Task.Run(async () => { await DeleteCharacter(); }).Wait();
+                        return View("Death");
                         break;
                     default:
                         break;
@@ -189,7 +204,7 @@ namespace Amarath.Controllers
             {
                 AddToDialog(viewModel.UserInput + " is not a valid choice!", txtDanger);
             }
-            //Call the action down here because the Session Dialog needs to be set so it doesn't get overwritten.
+            //Call the action down here because the Session Dialog needs to be set so it doesn't get overwritten
             if (task != null)
             {
                 Task.Run(async () => { await task(); }).Wait();
@@ -197,6 +212,7 @@ namespace Amarath.Controllers
 
             viewModel.UserInput = ""; //Reset user input
             return View("Play", viewModel);
+
         }
 
         public async Task AscendLevel()
@@ -300,6 +316,7 @@ namespace Amarath.Controllers
             enemy.Health = cEnemy.Health;
             enemy.MinDamage = cEnemy.MinDamage;
             enemy.MaxDamage = cEnemy.MaxDamage;
+            enemy.Rank = cEnemy.Rank;
 
             //Strength modifies TotalAttack
             //Intelligence modifies loot chance and critical attack
@@ -360,8 +377,7 @@ namespace Amarath.Controllers
                     }
                 }
             }
-            db.SaveChanges();
-
+            
             if(enemy.Health <= 0)
             {
                 AddToAction("You successfully killed " + enemy.Name, txtSuccess);
@@ -370,11 +386,24 @@ namespace Amarath.Controllers
                 AddToChoices("proceed");
                 AddToDialog(" - Loot", txtOptions);
                 AddToDialog(" - Proceed", txtOptions);
+                var exp = rand.Next(enemy.Rank * 15, enemy.Rank * 20);
+                cChar.Experience += exp;
+                AddToAction("You gained " + exp + " experience!", txtSuccess);
 
             }
-            else if(cChar.CurrentHealth <= 0)
+            if(cChar.CurrentHealth <= 0)
             {
+                AddToDialog("You have died!", txtDanger);
+                AddToAction("You have died!", txtDanger);
                 AddToAction("You were killed by " + enemy.Name, txtDanger);
+                ClearChoices();
+                AddToChoices("accept fate");
+                AddToDialog("- Accept Fate", txtOptions);
+            }
+            db.SaveChanges();
+            if(cChar.Experience >= 100)
+            {
+                Task.Run(async () => { await LevelUp(); }).Wait();
             }
         }
         public async Task<IActionResult> EquipItem(int inventoryId)
@@ -406,7 +435,7 @@ namespace Amarath.Controllers
                 AddToAction("You unequipped the " + selectedItem.Name, txtNormal);
             }
             db.SaveChanges();
-            UpdateTotals();
+            await UpdateTotals();
 
             return View("Play");
         }
@@ -433,6 +462,7 @@ namespace Amarath.Controllers
                 cChar.TotalDefense += currentItem.Defense;
                 cChar.TotalAttack += currentItem.Damage;
             }
+            cChar.TotalAttack += Convert.ToInt32(Math.Floor(cChar.TotalStrength * .20));
             db.SaveChanges();
             return View("Play");
         }
@@ -469,16 +499,23 @@ namespace Amarath.Controllers
             db.SaveChanges();
             return View("Play");
         }
-        public async Task<IActionResult> DeleteCharacter()
+        public async Task<ViewResult> DeleteCharacter()
         {
             var cUser = await userManager.GetUserAsync(User);
             var cChar = db.Characters.First(x => x.UserId == cUser.Id);
+            var inventories = from i in db.Inventories select i;
 
+            foreach(Inventory inv in inventories)
+            {
+                if(inv.CharID == cChar.CharId)
+                {
+                    db.Inventories.Remove(inv);
+                }
+            }
             //Absolutly brutal
             db.Characters.Remove(cChar);
             db.SaveChanges();
-
-            return RedirectToAction("Home", "Index");
+            return View("Death");
         }
         // =================== Methods to handle HTTP Session =================== //
         public void AddToDialog(string str, string txt)
