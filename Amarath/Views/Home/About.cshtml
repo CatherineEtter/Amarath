@@ -22,11 +22,11 @@
         background-size: cover;
     }
     .dev {
-        border-radius: 100%;
         background-color:black;
-        width: 50%;
+        width: 20rem; height: 20rem;
         margin-left:auto;
         margin-right:auto;
+        object-fit: scale-down;
     }
 </style>
 <div class="container margin-container">
@@ -45,14 +45,17 @@
             <h3> Developers</h3>
             <div class="row">
                 <div class="col-sm-4 col-md-4">
+                    <img src="~/images/CEPic.gif" class="img-circle img-thumbnail dev" />
                     <h4>Catherine Etter</h4>
                     <a href="https://github.com/CatherineEtter">Github</a> / <a href="https://www.linkedin.com/in/catherine-e-0b1299103/">LinkedIn</a>
                 </div>
                 <div class="col-sm-4 col-md-4">
+                    <img id="TFImg" src="~/images/TFPic.jpg" class="img-circle img-thumbnail dev" onmouseover="$(this).attr('src', '/images/girl.jpg');"/>
                     <h4>Tamas Ferenczi</h4>
                     <a href="https://github.com/Tferenczi">Github</a> / <a href="https://www.linkedin.com/in/tamas-ferenczi-8a980b15a/">LinkedIn</a>
                 </div>
                 <div class="col-sm-4 col-md-4">
+                    <img id="HMImg" src="~/images/HMPic.jpg" class="img-circle img-thumbnail dev" onmouseover="$(this).attr('src', '/images/cat.jpg');"/>
                     <h4>Hailey Martinez</h4>
                     <a href="https://github.com/HMartinez20">Github</a> / <a href="https://www.linkedin.com/in/hailey-martinez-b4a702132/">LinkedIn</a>
                 </div>
