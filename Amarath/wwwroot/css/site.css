@@ -126,6 +126,12 @@ body {
 #game-stage {
     flex: 1;
 }
+.game-borders {
+    background: url(/images/yellow_parchment.jpg) no-repeat center center fixed;
+    background-size: cover;
+    color: #000000;
+    border: 5px groove #4b2e12;
+}
 .main-font {
     font: bold 18px copperplate, verdana;
 }

@@ -48,7 +48,7 @@
 </script>
 <body onload="autoScroll();">
     <div class="game-container text-center main-font" onload="javascript: alertme();">
-        <div class="game-header">
+        <div class="game-header game-borders">
             <div class="row max-width">
                 <div class="col-md-3">@cChar.Name</div>
                 <div class="col-md-6">Health: @cChar.CurrentHealth / @cChar.MaxHealth</div>
@@ -77,7 +77,7 @@
                 <br />
             </div>
         </div>
-        <div class="game-footer">
+        <div class="game-footer game-borders">
             <div class="row max-width">
                 <div class="col-md-5">
                     @using (Html.BeginForm("PlayerCommand", "Game", FormMethod.Post))
@@ -237,6 +237,7 @@
                         <li> - Move through, explore, loot, and attack by typing in the appropriate command in the lower left box.</li>
                         <li> - Consume items like potions or equip armor by clicking on the inventory button in the lower right.</li>
                         <li> - View your current stats by clicking the stats button.</li>
+                        <li> - It takes 100 experience points to gain a level</li>
                         <li> - Pay attention to your health at the top!</li>
                     </ul>
                     <h3>Stats</h3>

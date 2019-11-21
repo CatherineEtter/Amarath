@@ -78,17 +78,19 @@ namespace Amarath.Controllers
             var cChar = db.Characters.First(x => x.UserId == cUser.Id);
             while(cChar.Experience >= experienceToLevel)
             {
+                
                 cChar.Rank += 1;
                 cChar.Strength += 1;
                 cChar.Dexterity += 1;
                 cChar.Intelligence += 1;
                 cChar.MaxHealth += 10;
-                cChar.CurrentHealth = cChar.MaxHealth;
+                var hp = ((cChar.MaxHealth - cChar.CurrentHealth) > 30) ? cChar.CurrentHealth + 30 : cChar.MaxHealth;
+                cChar.CurrentHealth = hp;
                 cChar.Experience -= experienceToLevel;
                 db.SaveChanges();
 
                 AddToAction("You gained a level! You are now level " + cChar.Rank, txtSuccess);
-                AddToAction("You have been healed, gained a point to all skills and 10 hp points", txtSuccess);
+                AddToAction("You have been healed by 30 points, gained a point to all skills and  hp points", txtSuccess);
             }
 
             return RedirectToAction("Play", "Game");
@@ -375,7 +377,7 @@ namespace Amarath.Controllers
                     }
                     else if (hitChance < dodgeChance + 10)
                     {
-                        var crit = enemy.MaxDamage + rand.Next(10, 20);
+                        var crit = enemy.MaxDamage + rand.Next(5, 10);
                         var defense = (cChar.TotalDefense > crit) ? crit : cChar.TotalDefense;
                         crit -= defense;
                         cChar.CurrentHealth -= crit;
@@ -528,6 +530,11 @@ namespace Amarath.Controllers
             //Absolutly brutal
             db.Characters.Remove(cChar);
             db.SaveChanges();
+
+            HttpContext.Session.Remove("Dialog");
+            HttpContext.Session.Remove("Action");
+            HttpContext.Session.Remove("Choices");
+
             return View("Death");
         }
         // =================== Methods to handle HTTP Session =================== //
