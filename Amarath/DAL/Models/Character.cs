@@ -25,5 +25,8 @@ namespace Amarath.Models
         public int DungeonLevel { get; set; }
         public int TotalDefense { get; set; }
         public int TotalAttack { get; set; }
+        public int TotalStrength { get; set; }
+        public int TotalDexterity { get; set; }
+        public int TotalIntelligence { get; set; }
     }
 }

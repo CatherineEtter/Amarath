@@ -48,7 +48,7 @@
         </div>
     </div>
     <div id="game-stage" class="row text-left">
-        <div id="game-dialog-box" class="col-md-8">
+        <div class="col-md-8 game-dialog-box">
             @{
                 var dialog = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(HttpContextAccessor.HttpContext.Session.GetString("Dialog"));
                 @foreach (KeyValuePair<string, string> item in dialog)
@@ -57,7 +57,7 @@
                 }
             }
         </div>
-        <div id="game-action-box" class="col-md-4">
+        <div class="col-md-4 game-action-box">
             @{
                 var action = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(HttpContextAccessor.HttpContext.Session.GetString("Action"));
                 @foreach (KeyValuePair<string, string> item in action)
@@ -69,10 +69,10 @@
     </div>
     <div class="game-footer">
         <div class="row max-width">
-            <div class="col-md-6">
+            <div class="col-md-5">
                 @using (Html.BeginForm("PlayerCommand", "Game", FormMethod.Post))
                 {
-                    <input asp-for="UserInput"/>
+                    <input asp-for="UserInput" />
                     <button type="submit">Enter</button>
                 }
                 <a asp-area="" asp-controller="Game" asp-action="LevelUp">Level Up</a>
@@ -82,6 +82,9 @@
             </div>
             <div class="col-md-3">
                 <button class="btn btn-default main-font" data-toggle="modal" data-target="#statsModal"> Stats </button>
+            </div>
+            <div class="col-md-1">
+                <button class="btn btn-default main-font" data-toggle="modal" data-target="#tutorialModal"> ? </button>
             </div>
         </div>
     </div>
@@ -104,30 +107,29 @@
                     <div class="row">
                         <div class="col-md-6">Strength</div>
                         <div class="col-md-3">@cChar.Strength</div>
-                        <div class="col-md-3">Total</div>
+                        <div class="col-md-3 special-text">@cChar.TotalStrength</div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">Dexterity</div>
                         <div class="col-md-3">@cChar.Dexterity</div>
-                        <div class="col-md-3">Total</div>
+                        <div class="col-md-3 special-text">@cChar.TotalDexterity</div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">Intelligence</div>
                         <div class="col-md-3">@cChar.Intelligence</div>
-                        <div class="col-md-3">Total</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">Max Health</div>
-                        <div class="col-md-3">@cChar.MaxHealth</div>
-                        <div class="col-md-3">Total</div>
+                        <div class="col-md-3 special-text">@cChar.TotalIntelligence</div>
                     </div>
                     <div class="row">
                         <div class="col-md-9">Total Defense</div>
-                        <div class="col-md-3">@cChar.TotalDefense</div>
+                        <div class="col-md-3 special-text">@cChar.TotalDefense</div>
                     </div>
                     <div class="row">
                         <div class="col-md-9">Total Attack</div>
-                        <div class="col-md-3">@cChar.TotalAttack</div>
+                        <div class="col-md-3 special-text">@cChar.TotalAttack</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-9">Max Health</div>
+                        <div class="col-md-3 special-text">@cChar.MaxHealth</div>
                     </div>
                 </div>
             </div>
@@ -162,40 +164,61 @@
                     @foreach (var item in cInventory)
                     {
                         var detail = db.Items.First(x => x.ItemID == item.ItemID);
-                    <div class="row">
-                        <div class="col-md-3">@detail.Name</div>
-                        <div class="col-md-1">@item.Quantity</div>
-                        <div class="col-md-1">@detail.Type</div>
-                        <div class="col-md-1">@detail.Strength</div>
-                        <div class="col-md-1">@detail.Dexterity</div>
-                        <div class="col-md-1">@detail.Intelligence</div>
-                        <div class="col-md-1">@detail.Damage</div>
-                        <div class="col-md-1">@detail.Defense</div>
-                        @if (detail.IsEquippable)
-                        {
-                            if (item.Equiped)
+                        <div class="row">
+                            <div class="col-md-3">@detail.Name</div>
+                            <div class="col-md-1">@item.Quantity</div>
+                            <div class="col-md-1">@detail.Type</div>
+                            <div class="col-md-1">@detail.Strength</div>
+                            <div class="col-md-1">@detail.Dexterity</div>
+                            <div class="col-md-1">@detail.Intelligence</div>
+                            <div class="col-md-1">@detail.Damage</div>
+                            <div class="col-md-1">@detail.Defense</div>
+                            @if (detail.IsEquippable)
                             {
-                                <div class="col-md-1"><a asp-area="" asp-controller="Game" asp-action="EquipItem" asp-route-inventoryId="@item.InvID">Unequip</a></div>
+                                if (item.Equiped)
+                                {
+                                    <div class="col-md-1"><a asp-area="" asp-controller="Game" asp-action="EquipItem" asp-route-inventoryId="@item.InvID">Unequip</a></div>
+                                }
+                                else
+                                {
+                                    <div class="col-md-1"><a asp-area="" asp-controller="Game" asp-action="EquipItem" asp-route-inventoryId="@item.InvID">Equip</a></div>
+                                }
                             }
-                            else
+                            else if (detail.IsUsable)
                             {
-                                <div class="col-md-1"><a asp-area="" asp-controller="Game" asp-action="EquipItem" asp-route-inventoryId="@item.InvID">Equip</a></div>
+                                <div class="col-md-1"><a asp-area="" asp-controller="Game" asp-action="UseItem" asp-route-inventoryid="@item.InvID">Use</a></div>
                             }
-                        }
-                        else if (detail.IsUsable)
-                        {
-                            <div class="col-md-1"><a asp-area="" asp-controller="Game" asp-action="UseItem" asp-route-inventoryid="@item.InvID">Use</a></div>
-                        }
-                    </div>
+                        </div>
                         <div class="item-detail body-font-sm">
                             <div><em>@detail.Description</em></div>
                         </div>
-
                     }
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Apply</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Tutorial Modal-->
+<div class="modal fade" id="tutorialModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content game-modal">
+            <div class="modal-header">
+                <h2>How To Play</h2>
+            </div>
+            <div class="modal-body">
+                <ul class="list-unstyled">
+                    <li>Move through, explore, loot, and attack by typing in the appropriate command in the lower left box.</li>
+                    <li>Consume items like potions or equip armor by clicking on the inventory button in the lower right.</li>
+                    <li>View your current stats by clicking the stats button.</li>
+                    <li>Pay attention to your health at the top!</li>
+                </ul>
+                <p>Enjoy! :)</p>
+            </div>
+            <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
             </div>
         </div>

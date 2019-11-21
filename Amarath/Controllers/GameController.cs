@@ -90,11 +90,16 @@ namespace Amarath.Controllers
             {
                 AddToChoices("explore");
                 AddToChoices("proceed");
-                AddToChoices("leave");
+                
                 AddToDialog("You enter and look around.", txtNormal);
                 AddToDialog(" - Explore", txtOptions);
                 AddToDialog(" - Proceed", txtOptions);
-                AddToDialog(" - Leave", txtOptions);
+                
+                if(Convert.ToInt32(HttpContext.Session.GetString("DungeonLevel")) != 1)
+                {
+                    AddToChoices("back");
+                    AddToDialog(" - Back", txtOptions);
+                }
             }
 
             if (randNum == 0)
@@ -109,12 +114,14 @@ namespace Amarath.Controllers
             var cEnemy = db.Enemies.First(x => x.Rank == dlevel);
 
             AddToChoices("attack");
-            AddToChoices("run");
-
             AddToAction("A " + cEnemy.Name + " appears!", txtDanger);
             AddToAction("Lvl: " + cEnemy.Rank + "| HP: " + cEnemy.Health + "| Min Dmg: " + cEnemy.MinDamage + "| Max Dmg: " + cEnemy.MaxDamage, txtInfo);
             AddToDialog(" - Attack", txtOptions);
-            AddToDialog(" - Run", txtOptions);
+            if(Convert.ToInt32(HttpContext.Session.GetString("DungeonLevel")) != 1)
+            {
+                AddToChoices("run");
+                AddToDialog(" - Run", txtOptions);
+            }
 
             return RedirectToAction("Play", "Game");
         }
@@ -136,7 +143,7 @@ namespace Amarath.Controllers
                         AddToDialog("You move on...", txtNormal);
                         task = AscendLevel;
                         break;
-                    case "leave":
+                    case "back":
                         AddToDialog("You decide to go back", txtNormal);
                         task = DescendLevel;
                         break;
@@ -169,6 +176,10 @@ namespace Amarath.Controllers
                     case "loot":
                         AddToDialog("You loot the corpse", txtNormal);
                         task = GetItems;
+                        break;
+                    case "accept fate":
+                        AddToDialog("You have accepted your fate...", txtDanger);
+                        task = DeleteCharacter;
                         break;
                     default:
                         break;
@@ -269,9 +280,9 @@ namespace Amarath.Controllers
             db.SaveChanges();
 
             ClearChoices();
-            AddToChoices("leave");
+            AddToChoices("back");
             AddToChoices("proceed");
-            AddToDialog(" - Leave", txtOptions);
+            AddToDialog(" - Back", txtOptions);
             AddToDialog(" - Proceed", txtOptions);
 
             return View("Play");
@@ -290,46 +301,62 @@ namespace Amarath.Controllers
             enemy.MinDamage = cEnemy.MinDamage;
             enemy.MaxDamage = cEnemy.MaxDamage;
 
+            //Strength modifies TotalAttack
+            //Intelligence modifies loot chance and critical attack
+            //Dexterity affects dodge chance
             while (enemy.Health > 0 && cChar.CurrentHealth > 0)
             {
                 AddToAction(enemy.Name + "'s HP: " + enemy.Health, txtInfo);
+                //Player attacks
                 if (cChar.CurrentHealth > 0)
                 {
-                    var chance = rand.Next(1, 100);
+                    //Max crit chance is 60%
+                    //Base enemy dodge is 10%
+                    var critChance = 10 + cChar.Intelligence > 60 ? 60 : 10 + cChar.Intelligence;
+                    var hitChance = rand.Next(1, 100);
+                    var hitValue = cChar.TotalAttack;
+
                     AddToAction("You go in for an attack...", txtNormal);
-                    if (chance < 10)
+                    if (hitChance < critChance)
                     {
-                        enemy.Health -= 25;
-                        AddToAction("Critical! You did 25 hp of damage!", txtInfo);
+                        var crit = hitValue + rand.Next(5, 20);
+                        enemy.Health -= crit;
+                        AddToAction("Critical! You did " + crit + " hp of damage!", txtInfo);
                     }
-                    else if (chance < 70)
-                    {
-                        enemy.Health -= 10;
-                        AddToAction(" You did 10 hp of damage!", txtInfo);
-                    }
-                    else
+                    else if (hitChance < critChance + 10)
                     {
                         AddToAction(enemy.Name + " dodged the attack!", txtInfo);
                     }
+                    else
+                    {
+                        enemy.Health -= hitValue;
+                        AddToAction(" You did " + hitValue + " hp of damage!", txtInfo);
+                    }
                 }
-
+                //Enemy attacks
                 if(enemy.Health > 0)
                 {
-                    var chance = rand.Next(1, 100);
+                    //Max dodge chance is 70
+                    //10% chance for enemy crit
+                    var dodgeChance = 10 + cChar.Dexterity > 70 ? 70 : 10 + cChar.Dexterity;
+                    var hitChance = rand.Next(1, 100);
+                    var hitValue = rand.Next(enemy.MinDamage, enemy.MaxDamage + 1);
+
                     AddToAction(enemy.Name + " goes in for an attack...", txtNormal);
-                    if (chance < 10)
+                    if (hitChance < dodgeChance)
                     {
-                        cChar.CurrentHealth -= 10;
-                        AddToAction("Critical! " + enemy.Name + " did 10 hp of damage!", txtInfo);
+                        AddToAction("You dodged the attack!", txtInfo);
                     }
-                    else if (chance < 70)
+                    else if (hitChance < dodgeChance + 10)
                     {
-                        cChar.CurrentHealth -= 5;
-                        AddToAction(enemy.Name + " did 5 hp of damage!", txtInfo);
+                        var crit = enemy.MaxDamage + rand.Next(1, 10);
+                        cChar.CurrentHealth -= crit;
+                        AddToAction("Critical! " + enemy.Name + " did " + crit + " hp of damage!", txtDanger);
                     }
                     else
                     {
-                        AddToAction("You dodged the attack!", txtInfo);
+                        cChar.CurrentHealth -= 5;
+                        AddToAction(enemy.Name + " did " + hitValue + " hp of damage!", txtDanger);
                     }
                 }
             }
@@ -379,10 +406,36 @@ namespace Amarath.Controllers
                 AddToAction("You unequipped the " + selectedItem.Name, txtNormal);
             }
             db.SaveChanges();
+            UpdateTotals();
 
             return View("Play");
         }
 
+        public async Task<IActionResult> UpdateTotals()
+        {
+            var cUser = await userManager.GetUserAsync(User);
+            var cChar = db.Characters.First(x => x.UserId == cUser.Id);
+            var equippedItems = from x in db.Inventories where (x.Equiped == true && x.CharID == cChar.CharId) select x;
+
+            //Reset Character's totals
+            cChar.TotalStrength = cChar.Strength;
+            cChar.TotalDexterity = cChar.Dexterity;
+            cChar.TotalIntelligence = cChar.Intelligence;
+            cChar.TotalDefense = 0;
+            cChar.TotalAttack = 0;
+
+            foreach (Inventory inv in equippedItems)
+            {
+                var currentItem = db.Items.FirstOrDefault(x => x.ItemID == inv.ItemID);
+                cChar.TotalStrength += currentItem.Strength;
+                cChar.TotalDexterity += currentItem.Dexterity;
+                cChar.TotalIntelligence += currentItem.Intelligence;
+                cChar.TotalDefense += currentItem.Defense;
+                cChar.TotalAttack += currentItem.Damage;
+            }
+            db.SaveChanges();
+            return View("Play");
+        }
         public async Task<IActionResult> UseItem(int inventoryId)
         {
             var cUser = await userManager.GetUserAsync(User);
@@ -415,6 +468,17 @@ namespace Amarath.Controllers
             }
             db.SaveChanges();
             return View("Play");
+        }
+        public async Task<IActionResult> DeleteCharacter()
+        {
+            var cUser = await userManager.GetUserAsync(User);
+            var cChar = db.Characters.First(x => x.UserId == cUser.Id);
+
+            //Absolutly brutal
+            db.Characters.Remove(cChar);
+            db.SaveChanges();
+
+            return RedirectToAction("Home", "Index");
         }
         // =================== Methods to handle HTTP Session =================== //
         public void AddToDialog(string str, string txt)
