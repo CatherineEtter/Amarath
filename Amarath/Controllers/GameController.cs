@@ -221,7 +221,7 @@ namespace Amarath.Controllers
 
         }
 
-        public async Task AscendLevel()
+        public async Task<ViewResult> AscendLevel()
         {
             //Increment dungeon level
             var cUser = await userManager.GetUserAsync(User);
@@ -243,8 +243,11 @@ namespace Amarath.Controllers
                 HttpContext.Session.SetString("DungeonLevel", location.DungeonLevel.ToString());
                 GenerateOptions();
             }
+            AddToDialog("There is nothing left for you here...", txtNormal);
+
+            return View("Play");
         }
-        public async Task DescendLevel()
+        public async Task<ViewResult> DescendLevel()
         {
             //Increment dungeon level
             var cUser = await userManager.GetUserAsync(User);
@@ -263,6 +266,8 @@ namespace Amarath.Controllers
 
                 GenerateOptions();
             }
+            
+            return View("Play");
         }
 
         public async Task<IActionResult> GetItems()
@@ -404,6 +409,11 @@ namespace Amarath.Controllers
                 var exp = rand.Next(enemy.Rank * 10, enemy.Rank * 10 + 20);
                 cChar.Experience += exp;
                 AddToAction("You gained " + exp + " experience!", txtSuccess);
+
+                if(enemy.Name == "Nognor")
+                {
+                    AddToDialog("Congradulations, you have defeated Nognor!", txtSuccess);
+                }
 
             }
             if(cChar.CurrentHealth <= 0)

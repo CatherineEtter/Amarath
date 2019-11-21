@@ -64,5 +64,26 @@ namespace Amarath.Controllers
 
             return View(viewModel);
         }
+        public async Task<IActionResult> DeleteCharacter()
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<AmarathContext>();
+            var db = new AmarathContext(optionsBuilder.Options);
+            var cUser = await userManager.GetUserAsync(User);
+            var cChar = db.Characters.First(x => x.UserId == cUser.Id);
+            var inventories = from i in db.Inventories select i;
+
+            foreach (Inventory inv in inventories)
+            {
+                if (inv.CharID == cChar.CharId)
+                {
+                    db.Inventories.Remove(inv);
+                }
+            }
+            //Absolutly brutal
+            db.Characters.Remove(cChar);
+            db.SaveChanges();
+
+            return RedirectToAction("Death", "Game");
+        }
     }
 }
