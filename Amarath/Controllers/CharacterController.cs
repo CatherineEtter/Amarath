@@ -83,6 +83,10 @@ namespace Amarath.Controllers
             db.Characters.Remove(cChar);
             db.SaveChanges();
 
+            HttpContext.Session.Remove("Dialog");
+            HttpContext.Session.Remove("Action");
+            HttpContext.Session.Remove("Choices");
+
             return RedirectToAction("Death", "Game");
         }
     }
