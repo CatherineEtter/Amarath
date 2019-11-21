@@ -42,8 +42,8 @@
 </style>
 <script type="text/javascript">
     function autoScroll() {
-        $("#game-action-box").scrollTop($("#action-box")[0].scrollHeight);
-        $("#game-dialog-box").scrollTop($("#dialog-box")[0].scrollHeight);
+        $("#game-action-box").scrollTop($("#game-action-box")[0].scrollHeight);
+        $("#game-dialog-box").scrollTop($("#game-dialog-box")[0].scrollHeight);
     }
 </script>
 <body onload="autoScroll();">
@@ -85,7 +85,6 @@
                         <input asp-for="UserInput" />
                         <button type="submit">Enter</button>
                     }
-                    <a asp-area="" asp-controller="Game" asp-action="LevelUp">Level Up</a>
                 </div>
                 <div class="col-md-3">
                     <button class="btn btn-default main-font" data-toggle="modal" data-target="#inventoryModal"> Inventory </button>
@@ -113,34 +112,41 @@
                         <div class="col-md-3">Base</div>
                         <div class="col-md-3">Total</div>
                     </div>
+                    <hr class="hr-standard"/>
                     <div class="body-font">
                         <div class="row">
                             <div class="col-md-6">Strength</div>
                             <div class="col-md-3">@cChar.Strength</div>
                             <div class="col-md-3 special-text">@cChar.TotalStrength</div>
                         </div>
+                        <hr class="hr-margin-sm" />
                         <div class="row">
                             <div class="col-md-6">Dexterity</div>
                             <div class="col-md-3">@cChar.Dexterity</div>
                             <div class="col-md-3 special-text">@cChar.TotalDexterity</div>
                         </div>
+                        <hr class="hr-margin-sm" />
                         <div class="row">
                             <div class="col-md-6">Intelligence</div>
                             <div class="col-md-3">@cChar.Intelligence</div>
                             <div class="col-md-3 special-text">@cChar.TotalIntelligence</div>
                         </div>
+                        <hr class="hr-margin-sm" />
                         <div class="row">
                             <div class="col-md-9">Total Defense</div>
                             <div class="col-md-3 special-text">@cChar.TotalDefense</div>
                         </div>
+                        <hr class="hr-margin-sm" />
                         <div class="row">
                             <div class="col-md-9">Total Attack</div>
                             <div class="col-md-3 special-text">@cChar.TotalAttack</div>
                         </div>
+                        <hr class="hr-margin-sm" />
                         <div class="row">
                             <div class="col-md-9">Max Health</div>
                             <div class="col-md-3 special-text">@cChar.MaxHealth</div>
                         </div>
+                        <hr class="hr-margin-sm" />
                         <div class="row">
                             <div class="col-md-9">Experience</div>
                             <div class="col-md-3 special-text">@cChar.Experience</div>
@@ -174,6 +180,7 @@
                         <div class="col-md-1">Equip</div>
                         <div class="col-md-1"></div>
                     </div>
+                    <hr class="hr-standard"/>
                     <div class="body-font">
                         @foreach (var item in cInventory)
                         {
@@ -206,6 +213,7 @@
                             <div class="item-detail body-font-sm">
                                 <div><em>@detail.Description</em></div>
                             </div>
+                            <hr class="hr-margin-sm"/>
                         }
                     </div>
                 </div>

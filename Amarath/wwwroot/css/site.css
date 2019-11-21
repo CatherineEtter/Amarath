@@ -110,7 +110,7 @@ body {
     align-items: center;
 }
 #game-dialog-box {
-    background-color: rgba(0,0,0,0.4);
+    background-color: rgba(0,0,0,0.6);
     color: #e8e8e8;
     font: 14px monaco, consolas;
     height: 75vh;
@@ -148,4 +148,17 @@ body {
 }
 .special-text {
     color: #FF0000;
+}
+.hr-margin-sm {
+    margin: 1px;
+    border-top: 1px solid rgba(75, 46, 18,0.6);
+}
+.hr-standard {
+    border-top: 1px solid #4b2e12;
+}
+.modal-header {
+    border-bottom: 1px solid #4b2e12;
+}
+.modal-footer {
+    border-top: 1px solid #4b2e12;
 }
