@@ -24,6 +24,7 @@ namespace Amarath.Controllers
         private string txtOptions = "#66ffcc";
         private string txtSuccess = "#00FF00";
         private string txtInfo = "#FFFF00";
+        private int experienceToLevel = 100;
 
         private static DbContextOptionsBuilder<AmarathContext> optionsBuilder = new DbContextOptionsBuilder<AmarathContext>();
         private static readonly AmarathContext db = new AmarathContext(optionsBuilder.Options);
@@ -75,17 +76,20 @@ namespace Amarath.Controllers
             //Increment player level
             var cUser = await userManager.GetUserAsync(User);
             var cChar = db.Characters.First(x => x.UserId == cUser.Id);
-            cChar.Rank += 1;
-            cChar.Strength += 1;
-            cChar.Dexterity += 1;
-            cChar.Intelligence += 1;
-            cChar.MaxHealth += 10;
-            cChar.CurrentHealth = cChar.MaxHealth;
-            cChar.Experience = 0;
-            db.SaveChanges();
+            while(cChar.Experience >= experienceToLevel)
+            {
+                cChar.Rank += 1;
+                cChar.Strength += 1;
+                cChar.Dexterity += 1;
+                cChar.Intelligence += 1;
+                cChar.MaxHealth += 10;
+                cChar.CurrentHealth = cChar.MaxHealth;
+                cChar.Experience -= experienceToLevel;
+                db.SaveChanges();
 
-            AddToAction("You gained a level! You are now level " + cChar.Rank, txtSuccess);
-            AddToAction("You have been healed, gained a point to all skills and 10 hp points", txtSuccess);
+                AddToAction("You gained a level! You are now level " + cChar.Rank, txtSuccess);
+                AddToAction("You have been healed, gained a point to all skills and 10 hp points", txtSuccess);
+            }
 
             return RedirectToAction("Play", "Game");
         }
@@ -390,7 +394,7 @@ namespace Amarath.Controllers
                 AddToChoices("proceed");
                 AddToDialog(" - Loot", txtOptions);
                 AddToDialog(" - Proceed", txtOptions);
-                var exp = rand.Next(enemy.Rank * 15, enemy.Rank * 20);
+                var exp = rand.Next(enemy.Rank * 10, enemy.Rank * 10 + 20);
                 cChar.Experience += exp;
                 AddToAction("You gained " + exp + " experience!", txtSuccess);
 
@@ -405,7 +409,7 @@ namespace Amarath.Controllers
                 AddToDialog("- Accept Fate", txtOptions);
             }
             db.SaveChanges();
-            if(cChar.Experience >= 100)
+            if(cChar.Experience >= experienceToLevel)
             {
                 Task.Run(async () => { await LevelUp(); }).Wait();
             }
