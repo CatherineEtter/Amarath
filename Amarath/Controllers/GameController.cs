@@ -363,6 +363,7 @@ namespace Amarath.Controllers
                 {
                     //Max dodge chance is 70
                     //10% chance for enemy crit
+                    //Defense, like the attack, take the raw value and subtracts it from the hit value
                     var dodgeChance = 10 + cChar.Dexterity > 70 ? 70 : 10 + cChar.Dexterity;
                     var hitChance = rand.Next(1, 100);
                     var hitValue = rand.Next(enemy.MinDamage, enemy.MaxDamage + 1);
@@ -374,12 +375,16 @@ namespace Amarath.Controllers
                     }
                     else if (hitChance < dodgeChance + 10)
                     {
-                        var crit = enemy.MaxDamage + rand.Next(1, 10);
+                        var crit = enemy.MaxDamage + rand.Next(10, 20);
+                        var defense = (cChar.TotalDefense > crit) ? crit : cChar.TotalDefense;
+                        crit -= defense;
                         cChar.CurrentHealth -= crit;
                         AddToAction("Critical! " + enemy.Name + " did " + crit + " hp of damage!", txtDanger);
                     }
                     else
                     {
+                        var defense = (cChar.TotalDefense > hitValue) ? hitValue : cChar.TotalDefense;
+                        hitValue -= defense;
                         cChar.CurrentHealth -= 5;
                         AddToAction(enemy.Name + " did " + hitValue + " hp of damage!", txtDanger);
                     }
