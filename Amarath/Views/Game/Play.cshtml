@@ -30,14 +30,20 @@
         height: 100%;
     }
 
+    body {
+        background-color: #f0f0f0;
+        background: url(/images/wall_background.png) no-repeat center center fixed;
+        background-size: cover;
+    }
+
     container {
         padding: 0px;
     }
 </style>
 <script type="text/javascript">
     function autoScroll() {
-        $("#action-box").scrollTop($("#action-box")[0].scrollHeight);
-        $("#dialog-box").scrollTop($("#dialog-box")[0].scrollHeight);
+        $("#game-action-box").scrollTop($("#action-box")[0].scrollHeight);
+        $("#game-dialog-box").scrollTop($("#dialog-box")[0].scrollHeight);
     }
 </script>
 <body onload="autoScroll();">
@@ -50,7 +56,7 @@
             </div>
         </div>
         <div id="game-stage" class="row text-left">
-            <div id="dialog-box" class="col-md-8 game-dialog-box">
+            <div id="game-dialog-box" class="col-md-8">
                 @{
                     var dialog = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(HttpContextAccessor.HttpContext.Session.GetString("Dialog"));
                     @foreach (KeyValuePair<string, string> item in dialog)
@@ -60,7 +66,7 @@
                 }
                 <br />
             </div>
-            <div id="action-box" class="col-md-4 game-action-box">
+            <div id="game-action-box" class="col-md-4">
                 @{
                     var action = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(HttpContextAccessor.HttpContext.Session.GetString("Action"));
                     @foreach (KeyValuePair<string, string> item in action)
@@ -96,9 +102,9 @@
 
     <!--Stats Modal-->
     <div class="modal fade" id="statsModal" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content game-modal">
-                <div class="modal-header">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content login-register-container">
+                <div class="modal-header main-font">
                     <h2>@cChar.Name 's Stats</h2>
                 </div>
                 <div class="modal-body">
@@ -151,8 +157,8 @@
     <!--Inventory Modal-->
     <div class="modal fade" id="inventoryModal" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg">
-            <div class="modal-content game-modal">
-                <div class="modal-header">
+            <div class="modal-content login-register-container">
+                <div class="modal-header main-font">
                     <h2>@cChar.Name 's Inventory</h2>
                 </div>
                 <div class="modal-body">
@@ -213,23 +219,23 @@
     <!--Tutorial Modal-->
     <div class="modal fade" id="tutorialModal" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-md">
-            <div class="modal-content game-modal">
-                <div class="modal-header">
+            <div class="modal-content login-register-container">
+                <div class="modal-header main-font">
                     <h2>Tutorial</h2>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body body-font">
                     <h3>How to play</h3>
                     <ul class="list-unstyled">
-                        <li>Move through, explore, loot, and attack by typing in the appropriate command in the lower left box.</li>
-                        <li>Consume items like potions or equip armor by clicking on the inventory button in the lower right.</li>
-                        <li>View your current stats by clicking the stats button.</li>
-                        <li>Pay attention to your health at the top!</li>
+                        <li> - Move through, explore, loot, and attack by typing in the appropriate command in the lower left box.</li>
+                        <li> - Consume items like potions or equip armor by clicking on the inventory button in the lower right.</li>
+                        <li> - View your current stats by clicking the stats button.</li>
+                        <li> - Pay attention to your health at the top!</li>
                     </ul>
                     <h3>Stats</h3>
                     <ul class="list-unstyled">
-                        <li>Strength affects raw damage output</li>
-                        <li>Intelligence affects critical damage chance</li>
-                        <li>Dexterity affects dodge chance</li>
+                        <li> - Strength affects raw damage output</li>
+                        <li> - Intelligence affects critical damage chance</li>
+                        <li> - Dexterity affects dodge chance</li>
                     </ul>
                     <p>Enjoy! :)</p>
                 </div>
