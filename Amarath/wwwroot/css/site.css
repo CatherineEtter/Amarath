@@ -109,18 +109,15 @@ body {
     justify-content: center;
     align-items: center;
 }
-.game-modal {
-    background-color: rgba(0, 0, 0, 0.6);
-    color: #808080;
-}
-.game-dialog-box {
+#game-dialog-box {
+    background-color: rgba(0,0,0,0.6);
     color: #e8e8e8;
     font: 14px monaco, consolas;
     height: 75vh;
     overflow-y: scroll;
 }
-.game-action-box {
-    background-color: #272727;
+#game-action-box {
+    background-color: rgba(0,0,0,0.8);
     color: #f5f5f5;
     font: 14px monaco, consolas;
     height: 75vh;
@@ -128,6 +125,12 @@ body {
 }
 #game-stage {
     flex: 1;
+}
+.game-borders {
+    background: url(/images/yellow_parchment.jpg) no-repeat center center fixed;
+    background-size: cover;
+    color: #000000;
+    border: 5px groove #4b2e12;
 }
 .main-font {
     font: bold 18px copperplate, verdana;
@@ -151,4 +154,17 @@ body {
 }
 .special-text {
     color: #FF0000;
+}
+.hr-margin-sm {
+    margin: 1px;
+    border-top: 1px solid rgba(75, 46, 18,0.6);
+}
+.hr-standard {
+    border-top: 1px solid #4b2e12;
+}
+.modal-header {
+    border-bottom: 1px solid #4b2e12;
+}
+.modal-footer {
+    border-top: 1px solid #4b2e12;
 }
