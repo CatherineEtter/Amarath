@@ -76,12 +76,16 @@ namespace Amarath.Controllers
             var cUser = await userManager.GetUserAsync(User);
             var cChar = db.Characters.First(x => x.UserId == cUser.Id);
             cChar.Rank += 1;
+            cChar.Strength += 1;
+            cChar.Dexterity += 1;
+            cChar.Intelligence += 1;
+            cChar.MaxHealth += 10;
+            cChar.CurrentHealth = cChar.MaxHealth;
+            cChar.Experience = 0;
             db.SaveChanges();
 
-            //Add Message to action list
-            var listAction = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(HttpContext.Session.GetString("Action"));
-            listAction.Add(new KeyValuePair<string, string>("You are now level " + cChar.Rank, txtPlayer));
-            HttpContext.Session.SetString("Action", JsonConvert.SerializeObject(listAction));
+            AddToAction("You gained a level! You are now level " + cChar.Rank, txtSuccess);
+            AddToAction("You have been healed, gained a point to all skills and 10 hp points", txtSuccess);
 
             return RedirectToAction("Play", "Game");
         }
@@ -312,6 +316,7 @@ namespace Amarath.Controllers
             enemy.Health = cEnemy.Health;
             enemy.MinDamage = cEnemy.MinDamage;
             enemy.MaxDamage = cEnemy.MaxDamage;
+            enemy.Rank = cEnemy.Rank;
 
             //Strength modifies TotalAttack
             //Intelligence modifies loot chance and critical attack
@@ -372,8 +377,7 @@ namespace Amarath.Controllers
                     }
                 }
             }
-            db.SaveChanges();
-
+            
             if(enemy.Health <= 0)
             {
                 AddToAction("You successfully killed " + enemy.Name, txtSuccess);
@@ -382,6 +386,9 @@ namespace Amarath.Controllers
                 AddToChoices("proceed");
                 AddToDialog(" - Loot", txtOptions);
                 AddToDialog(" - Proceed", txtOptions);
+                var exp = rand.Next(enemy.Rank * 15, enemy.Rank * 20);
+                cChar.Experience += exp;
+                AddToAction("You gained " + exp + " experience!", txtSuccess);
 
             }
             if(cChar.CurrentHealth <= 0)
@@ -392,6 +399,11 @@ namespace Amarath.Controllers
                 ClearChoices();
                 AddToChoices("accept fate");
                 AddToDialog("- Accept Fate", txtOptions);
+            }
+            db.SaveChanges();
+            if(cChar.Experience >= 100)
+            {
+                Task.Run(async () => { await LevelUp(); }).Wait();
             }
         }
         public async Task<IActionResult> EquipItem(int inventoryId)
