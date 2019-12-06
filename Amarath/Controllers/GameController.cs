@@ -107,6 +107,10 @@ namespace Amarath.Controllers
                 AddToChoices("proceed");
                 AddToDialog(" - Proceed", txtOptions);
             }
+            else if (Convert.ToInt32(HttpContext.Session.GetString("DungeonLevel")) == 12)
+            {
+                SpawnEnemies();
+            }
             else if(randNum < 20)
             {
                 AddToChoices("explore");
@@ -243,7 +247,10 @@ namespace Amarath.Controllers
                 HttpContext.Session.SetString("DungeonLevel", location.DungeonLevel.ToString());
                 GenerateOptions();
             }
-            AddToDialog("There is nothing left for you here...", txtNormal);
+            else
+            {
+                AddToDialog("There is nothing left for you here...", txtNormal);
+            }
 
             return View("Play");
         }
@@ -270,7 +277,7 @@ namespace Amarath.Controllers
             return View("Play");
         }
 
-        public async Task<IActionResult> GetItems()
+        public async Task<ViewResult> GetItems()
         {
             Random rand = new Random();
             int randNumofloot = rand.Next(0, 3);
